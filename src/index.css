@@ -63,8 +63,7 @@ code {
   background-color: #adadad8e;
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
+ }
 
 .sample-grid {
   display: grid;

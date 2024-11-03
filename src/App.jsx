@@ -1,7 +1,25 @@
-// App.jsx
 import React, { useState, useEffect } from 'react';
-import Samplerr, { ordArray } from './Samplerr.jsx'; // Import Samplerr component
+import { OrbitControls, Environment, Center, GradientTexture } from '@react-three/drei'
+import { Canvas, useLoader } from '@react-three/fiber'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
+import Samplerr, { ordArray } from './Samplerr.jsx';
+import coin1 from './assets/coin1.png';
+import coin2 from './assets/coin2.png';
+import coin3 from './assets/coin3.png';
+import coin4 from './assets/coin4.png';
+import coin5 from './assets/coin5.png';
+import coin6 from './assets/coin6.png';
 
+const coinStyle = {
+  position: 'absolute',
+  bottom: '20px',
+  right: '20px',
+  height: '300px',
+  cursor: 'pointer',
+  zIndex: 1,
+  transition: 'transform 0.15s ease-in-out',
+  transformStyle: 'preserve-3d',
+};
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
@@ -17,6 +35,21 @@ for (let i = 0; i < 8; i++) {
 
 const colors = chunks.map(chunk => '#' + chunk.slice(0, 6));
 
+function GradientEnvironment() {
+  return (
+    <Environment background>
+      <mesh scale={100}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <meshBasicMaterial side={2}>
+          <GradientTexture
+            stops={[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]} // Add more stops for more complex gradients
+            colors={colors} // Use all colors from inscription
+          />
+        </meshBasicMaterial>
+      </mesh>
+    </Environment>
+  );
+}
 function VinylRecord({ text, onClick }) {
   return (
     <svg
@@ -72,7 +105,6 @@ function VinylRecord({ text, onClick }) {
     </svg>
   );
 }
-
 const ColorGrid = ({ isLarge, onClick }) => {
   const gridSize = isLarge ? '60vh' : '20vh';
   const svgSize = isLarge ? 300 : 100;
@@ -134,6 +166,8 @@ const ColorGrid = ({ isLarge, onClick }) => {
 };
 
 export default function App() {
+  const [isFlipping, setIsFlipping] = useState(false);
+  const gltf = useLoader(GLTFLoader, './vinyGLBkl.glb');
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
@@ -147,100 +181,144 @@ export default function App() {
   );
   const [audioUrl, setAudioUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [buttonImage, setButtonImage] = useState(() => {
+    const random = Math.random() * 100; // Generate number between 0-100
+    
+    // Rarity distribution:
+    // coin1: 30% (most common)
+    // coin2: 25%
+    // coin3: 20%
+    // coin4: 15%
+    // coin5: 8%
+    // coin6: 2% (rarest)
+    if (random < 40) return 'colorGrid';
+    if (random < 75) return coin1;
+    if (random < 80) return coin2;
+    if (random < 85) return coin3;
+    if (random < 92) return coin4;
+    if (random < 98) return coin5;
+    return coin6;
+  });
 
   useEffect(() => {
-    // Save the new loadCount to localStorage
     localStorage.setItem('loadCount', loadCount.toString());
-
-    // Check if we should show the sampler thumbnail every 5th load
-    if (loadCount % 5 === 0) {
-      setShowSamplerrThumbnail(true);
+ 
+        // setShowSamplerrThumbnail(true);
       const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
       setAudioUrl(randomOrd.audio);
       setImageUrl(randomOrd.image);
+      
+     if (isFlipping) {
+      const timer = setTimeout(() => {
+        setIsFlipping(false);
+        setShowSamplerrComponent(true);
+      }, 150); // Match this duration with CSS transition
+      return () => clearTimeout(timer);
     }
-
-    // Check CORS (you can adjust this logic as needed)
+    
+    console.log('Component mounted');
+    
     function checkCORS(url) {
-      if (url === 'localhost') {
+      if (url === "localhost") {
         setCorsSuccess(true);
-        console.log('CORS success (localhost)');
-      } else if (url === 'https://arweave.net/') {
+        console.log("CORS success (localhost)");
+      } else if (url === "https://arweave.net/") {
         setCorsSuccess(false);
-        console.log('CORS failure (arweave.net)');
+        console.log("CORS failure (arweave.net)");
       } else {
         // For any other URL, perform the actual CORS check
         fetch(url)
           .then(response => {
             if (response.ok) {
               setCorsSuccess(true);
-              console.log('CORS success');
+              console.log("CORS success");
             } else {
               setCorsSuccess(false);
-              console.log('CORS failure');
+              console.log("CORS failure");
             }
           })
           .catch(error => {
             setCorsSuccess(false);
-            console.log('CORS failure (error)', error);
+            console.log("CORS failure (error)", error);
           });
       }
-    }
-
-    const local = 'localhost';
-    checkCORS(local);
-
+    }  
+  
+  const url = "https://arweave.net/"; // or "localhost"
+  const local = "localhost";
+  checkCORS(local);
+  
+    // If you need to clean up (analogous to componentWillUnmount), return a function:
     return () => {
       console.log('Component will unmount');
+      // Clean up code here (e.g., remove event listeners)
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isFlipping]); // The empty array means this effect runs once on mount and clean up on unmount
 
   if (corsSuccess === null) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; 
   }
 
-  if (corsSuccess === false) {
-    return <div>CORS failure</div>;
-  } else {
+  if (corsSuccess === true) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          position: 'relative',
-          backgroundColor: '#1a1a1a', // Optional: added dark background to make vinyl pop
-        }}
-      >
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        position: 'relative',
+      }}>
         {!showSamplerrComponent ? (
           <>
-            <VinylRecord
-              text={text}
-              onClick={() => {
-                const newClickCount = clickCount + 1;
-                setClickCount(newClickCount);
-                localStorage.setItem('clickCount', newClickCount.toString());
-
-                if (showSamplerrThumbnail) {
-                  // Do nothing on vinyl click when thumbnail is displayed
-                } else {
-                  if (newClickCount % 5 === 0) {
-                    // Every 5th click, show the sampler thumbnail
-                    setShowSamplerrThumbnail(true);
-                    const randomOrd =
-                      ordArray[Math.floor(Math.random() * ordArray.length)];
-                    setAudioUrl(randomOrd.audio);
-                    setImageUrl(randomOrd.image);
-                  } else {
-                    // Show large color grid
-                    setShowColorGrid(true);
-                  }
-                }
-              }}
-            />
-            {showSamplerrThumbnail ? (
+            {buttonImage === 'colorGrid' ? (
+              // ColorGrid + VinylRecord pair
+              <>
+                <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
+                  <VinylRecord 
+                    text={text}
+                    onClick={() => setShowColorGrid(!showColorGrid)}
+                  />
+                </div>
+                <ColorGrid 
+                  isLarge={showColorGrid} 
+                  onClick={() => setShowColorGrid(!showColorGrid)}
+                />
+              </>
+            ) : (
+              // GLTF + Coin pair
+              <>
+                <Canvas camera={{ position: [0, -80, 0] }} shadows>
+                  {/* <GradientEnvironment /> */}
+                  <directionalLight
+                    position={[50, -400, 0]}
+                    intensity={Math.PI * 2}
+                  />
+                  <primitive
+                    object={gltf.scene}
+                    position={[0, 0, 0]}
+                    scale={3}
+                    children-0-castShadow
+                  />
+                  <Center position={[0, 0, 0]} />
+                  <OrbitControls target={[0, 0, 0]} />
+                </Canvas>
+  
+                <img
+                  src={buttonImage}
+                  alt="Play Button"
+                  style={{
+                    ...coinStyle,
+                    transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                  }}
+                  onClick={() => {
+                    setIsFlipping(true);
+                     console.log('Button clicked');
+                  }}
+                />
+              </>
+            )}
+  
+            {showSamplerrThumbnail && (
               <img
                 src={imageUrl}
                 alt="Samplerr Thumbnail"
@@ -248,46 +326,44 @@ export default function App() {
                   position: 'absolute',
                   bottom: '20px',
                   right: '20px',
-                  width: '150px',
-                  height: '200px',
+                  height: '300px',
                   cursor: 'pointer',
                   zIndex: 1,
                 }}
-                onClick={() => {
-                  // When thumbnail is clicked, show the Samplerr component in place of the vinyl
-                  setShowSamplerrComponent(true);
-                }}
+                onClick={() => setShowSamplerrComponent(true)}
               />
-            ) : (
-              <>
-                {showColorGrid && (
-                  <ColorGrid
-                    isLarge={true}
-                    onClick={() => setShowColorGrid(false)}
-                  />
-                )}
-                {!showColorGrid && (
-                  <ColorGrid
-                    isLarge={false}
-                    onClick={() => setShowColorGrid(true)}
-                  />
-                )}
-              </>
             )}
           </>
         ) : (
-          // Show Samplerr component in place of the vinyl
           <Samplerr
             audioUrl={audioUrl}
             imageUrl={imageUrl}
             onBack={() => {
               setShowSamplerrComponent(false);
-              // Optionally reset the thumbnail
-              // setShowSamplerrThumbnail(false);
             }}
           />
         )}
       </div>
-    );
+    )
+  } else {
+    return (
+    <iframe 
+        src="https://arweave.net/orpWhkJBqC1YXAhGSepRdY3Il6zlQ-4sOmxe-fVnRvk"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          margin: 0,
+          padding: 0,
+          overflow: 'hidden'
+        }}
+        title="Fullscreen Content"
+      />    )
   }
+
 }

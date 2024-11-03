@@ -49,7 +49,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
   const [baseSampleDuration, setBaseSampleDuration] = useState(0);
   const [sampleDuration, setSampleDuration] = useState(0);
   const [trackLoaded, setTrackLoaded] = useState(false);
-  const [isLooping, setIsLooping] = useState(true);
+  const [isLooping, setIsLooping] = useState(false);
   const [loopStarts, setLoopStarts] = useState(new Array(numSamples).fill(0));
   const [loopLengths, setLoopLengths] = useState(new Array(numSamples).fill(1.0));
   const [loopBPM, setLoopBPM] = useState(new Array(numSamples).fill(defaultBPM));
@@ -273,9 +273,16 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
     // Handle drum pads (channel 9)
     if (channel === 9) {
       if (command === 0x90 && velocity > 0) {
-        const index = note - 36;
+            // Convert MIDI note to grid index starting from bottom left
+      const midiOffset = note - 36; // Assuming MIDI notes start at 36
+      const row = Math.floor(midiOffset / 4);
+      const col = midiOffset % 4;
+      
+       const index = row * 3 + col;
+      if (index >= 0 && index < numSamples) {
         selectSample(index);
         playSample(index, loopLengths[index]);
+       }
       }
     }
     // Handle Control Change messages (knobs/sliders)
@@ -342,7 +349,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
               width: '100px',
               height: '100px',
               border:
-                selectedSampleIndex === pad.id ? '2px solid yellow' : '2px solid #444',
+              selectedSampleIndex === pad.id ? '2px solid yellow' : '2px solid #444',
               cursor: 'pointer',
             }}
           >
