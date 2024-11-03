@@ -3,12 +3,12 @@ import { OrbitControls, Environment, Center, GradientTexture } from '@react-thre
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import Samplerr, { ordArray } from './Samplerr.jsx';
-import coin1 from './assets/coin1.png';
-import coin2 from './assets/coin2.png';
-import coin3 from './assets/coin3.png';
-import coin4 from './assets/coin4.png';
-import coin5 from './assets/coin5.png';
-import coin6 from './assets/coin6.png';
+import coin1 from './assets/coin1.webp';
+import coin2 from './assets/coin2.webp';
+import coin3 from './assets/coin3.webp';
+import coin4 from './assets/coin4.webp';
+import coin5 from './assets/coin5.webp';
+import coin6 from './assets/coin6.webp';
 
 const coinStyle = {
   position: 'absolute',
@@ -207,7 +207,7 @@ export default function App() {
       const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
       setAudioUrl(randomOrd.audio);
       setImageUrl(randomOrd.image);
-      
+
      if (isFlipping) {
       const timer = setTimeout(() => {
         setIsFlipping(false);
