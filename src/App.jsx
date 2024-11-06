@@ -3,12 +3,12 @@ import { OrbitControls, Environment, Center, GradientTexture } from '@react-thre
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import Samplerr, { ordArray } from './Samplerr.jsx';
-import coin1 from './assets/coin1.webp';
-import coin2 from './assets/coin2.webp';
-import coin3 from './assets/coin3.webp';
-import coin4 from './assets/coin4.webp';
-import coin5 from './assets/coin5.webp';
-import coin6 from './assets/coin6.webp';
+let coin1 = 'https://radinals.bitcoinaudio.co/content/6ff136a03332352acd24f79aa6b12f87fe5b04dadbeb3d799c8a1fb3300f6106i0';
+let coin2 = 'https://radinals.bitcoinaudio.co/content/b6c72026e6b7414467ddf84719e004fbc871cf970352bc91c031e801417e9ef1i0';
+let coin3 = 'https://radinals.bitcoinaudio.co/content/c9e959193f89090d9eb61c9366b5c54532d72730c56c96cb7dc70330f77869b0i0';
+let coin4 = 'https://radinals.bitcoinaudio.co/content/d9def0942a07ae5e3cf301697def485f58e6d22fa195087d3be331e4ab717ca1i0';
+let coin5 = 'https://radinals.bitcoinaudio.co/content/d253f0b91080755c581f425fdf241308348eb414daa02c1c34321f6f4d623c52i0';
+let coin6 = 'https://radinals.bitcoinaudio.co/content/fcc768bd97119612e380260622a5196a452fc1bd346ae114f5af60dbe4213c9ei0';
 
 const coinStyle = {
   position: 'absolute',
@@ -23,8 +23,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-// var ins_id = urlarray[urlarray.length - 1];
-var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+var ins_id = urlarray[urlarray.length - 1];
+// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -167,7 +167,7 @@ const ColorGrid = ({ isLarge, onClick }) => {
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader, './vinyGLBkl.glb');
+  const gltf = useLoader(GLTFLoader, 'https://radinals.bitcoinaudio.co/content/8df042b2d8fd7f9e089072c266645567cebb9a7723ae0154902b2fd1239fc74bi0');
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
