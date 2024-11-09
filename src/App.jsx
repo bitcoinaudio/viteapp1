@@ -3,12 +3,12 @@ import { OrbitControls, Environment, Center, GradientTexture } from '@react-thre
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import Samplerr, { ordArray } from './Samplerr.jsx';
-let coin1 = 'https://radinals.bitcoinaudio.co/content/6ff136a03332352acd24f79aa6b12f87fe5b04dadbeb3d799c8a1fb3300f6106i0';
-let coin2 = 'https://radinals.bitcoinaudio.co/content/b6c72026e6b7414467ddf84719e004fbc871cf970352bc91c031e801417e9ef1i0';
-let coin3 = 'https://radinals.bitcoinaudio.co/content/c9e959193f89090d9eb61c9366b5c54532d72730c56c96cb7dc70330f77869b0i0';
-let coin4 = 'https://radinals.bitcoinaudio.co/content/d9def0942a07ae5e3cf301697def485f58e6d22fa195087d3be331e4ab717ca1i0';
-let coin5 = 'https://radinals.bitcoinaudio.co/content/d253f0b91080755c581f425fdf241308348eb414daa02c1c34321f6f4d623c52i0';
-let coin6 = 'https://radinals.bitcoinaudio.co/content/fcc768bd97119612e380260622a5196a452fc1bd346ae114f5af60dbe4213c9ei0';
+let coin1 = 'https://ordinals.com/content/0e113d456b01a5d008c7f0da74eef02ea9a7315d74a6ba6299425d47036909bdi0';
+let coin2 = 'https://ordinals.com/content/bf7561a8d27133a3e1144ac49ae1c24ac263f4271d5cf07f151740b3f3c3c54ci0';
+let coin3 = 'https://ordinals.com/content/9d05e297b0e32bd4c955914c03c406eb98635fd805a7c01340f89660aea69ad4i0';
+let coin4 = 'https://ordinals.com/content/503b48a1b7c209c88467fb76773ee3d6215a2a32d3771a9479d76034d315c9eei0';
+let coin5 = 'https://ordinals.com/content/5fab883761387f948b62fcd7e2c58fae14fc22338783d641d489154fa3de4d9fi0';
+let coin6 = 'https://ordinals.com/content/9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0';
 
 const coinStyle = {
   position: 'absolute',
@@ -33,7 +33,7 @@ for (let i = 0; i < 8; i++) {
   chunks.push(id.slice(i * chunkSize, (i + 1) * chunkSize));
 }
 
-const colors = chunks.map(chunk => '#' + chunk.slice(0, 6));
+const colors = chunks.map(chunk => '#' + chunk.slice(0, 6) + "a0");
 
 function GradientEnvironment() {
   return (
@@ -167,7 +167,7 @@ const ColorGrid = ({ isLarge, onClick }) => {
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader, 'https://radinals.bitcoinaudio.co/content/8df042b2d8fd7f9e089072c266645567cebb9a7723ae0154902b2fd1239fc74bi0');
+  const gltf = useLoader(GLTFLoader, './pow.glb');
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
@@ -288,7 +288,7 @@ export default function App() {
               // GLTF + Coin pair
               <>
                 <Canvas camera={{ position: [0, -80, 0] }} shadows>
-                  {/* <GradientEnvironment /> */}
+                  <GradientEnvironment /> 
                   <directionalLight
                     position={[50, -400, 0]}
                     intensity={Math.PI * 2}
@@ -296,6 +296,7 @@ export default function App() {
                   <primitive
                     object={gltf.scene}
                     position={[0, 0, 0]}
+                    rotation={[0, 0, 0]}
                     scale={3}
                     children-0-castShadow
                   />

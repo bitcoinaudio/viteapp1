@@ -329,7 +329,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
   };
 
   return (
-    <div className="samplerr-container">
+    <div className="samplerr-container  bg-black">
       <button onClick={onBack}>Back</button>
       <div
         className="sample-grid"
@@ -363,7 +363,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
       </div>
 
       {trackLoaded ? (
-        <div className="controls" style={{ marginTop: '20px' }}>
+        <div className="controls " style={{ marginTop: '20px' }}>
           <div>
             <label>
               Start Time: {formatTime(selectedSampleIndex * baseSampleDuration)}
