@@ -14,7 +14,7 @@ const coinStyle = {
   position: 'absolute',
   bottom: '20px',
   right: '20px',
-  height: '300px',
+  height: '600px',
   cursor: 'pointer',
   zIndex: 1,
   transition: 'transform 0.15s ease-in-out',
@@ -309,6 +309,8 @@ export default function App() {
                   alt="Play Button"
                   style={{
                     ...coinStyle,
+                    width: '20vw',
+                    height: 'auto',
                     transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
                   }}
                   onClick={() => {
