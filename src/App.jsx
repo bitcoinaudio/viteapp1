@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { OrbitControls, Environment, Center, GradientTexture } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
@@ -167,7 +167,7 @@ const ColorGrid = ({ isLarge, onClick }) => {
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader, 'https://radinals.bitcoinaudio.co/content/8df042b2d8fd7f9e089072c266645567cebb9a7723ae0154902b2fd1239fc74bi0');
+  const gltf = useLoader(GLTFLoader, './pow.glb');
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
