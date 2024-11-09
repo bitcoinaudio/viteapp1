@@ -23,8 +23,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-// var ins_id = urlarray[urlarray.length - 1];
-var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+var ins_id = urlarray[urlarray.length - 1];
+// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -167,7 +167,7 @@ const ColorGrid = ({ isLarge, onClick }) => {
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader, './pow.glb');
+  const gltf = useLoader(GLTFLoader, 'https://radinals.bitcoinaudio.co/content/8df042b2d8fd7f9e089072c266645567cebb9a7723ae0154902b2fd1239fc74bi0');
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
