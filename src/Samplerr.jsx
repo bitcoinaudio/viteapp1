@@ -34,16 +34,24 @@ export const ordArray = [
         },
         {
            id: 5,
-           name: 'GFK',
-           alias: 'GFK',
-           audio: 'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0',
-           image: 'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0',
-        }
+           name: 'Rare Scrilla',
+           alias: 'Rare Scrilla',
+           audio: 'https://ordinals.com/content/0dd65cb9dfa10d672c16e3741d73eead9085a710ff5f8796ef626799c85f944bi0',
+           image: 'https://ordinals.com/content/3c4062f5e3433b997a92020f849fad8a82c7c2369a5c810a2f92ecdd61421e33i0',
+        },
+        {
+          id: 6,
+          name: 'GFK',
+          alias: 'GFK',
+          audio: 'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0',
+          image: 'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0',
+       }
    ];
    
 
-const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
+const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
   // States
+  const [isFlipping, setIsFlipping] = useState(false);
   const [player, setPlayer] = useState(null);
   const [selectedSampleIndex, setSelectedSampleIndex] = useState(-1);
   const [baseSampleDuration, setBaseSampleDuration] = useState(0);
@@ -73,6 +81,14 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
   useEffect(() => {
     loadSoundAndImage(audioUrl, imageUrl);
 
+    if (isFlipping) {
+      const timer = setTimeout(() => {
+        setIsFlipping(false);
+        setShowSamplerrComponent(true);
+      }, 150); // Match this duration with CSS transition
+      return () => clearTimeout(timer);
+    }
+
     // Load MIDI assignments from localStorage
     const storedMidiAssignments = JSON.parse(localStorage.getItem('midiAssignments'));
     if (storedMidiAssignments) {
@@ -93,7 +109,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isFlipping]);
 
   const loadSoundAndImage = (audioUrl, imageUrl) => {
     const newPlayer = new Tone.Player({
@@ -328,14 +344,90 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
     return `${minutes}:${seconds}`;
   };
 
+  const sliderStyles = {
+    container: {
+      marginTop: '4px',
+    },
+    slider: {
+      WebkitAppearance: 'none',
+      width: '100%',
+      height: '2px',
+      borderRadius: '5px',
+      background: '#d3d3d3',
+      outline: 'none',
+      opacity: '0.7',
+      transition: 'opacity .2s',
+    },
+    // Webkit (Chrome, Safari, newer versions of Opera)
+    sliderThumb: {
+      WebkitAppearance: 'none',
+      appearance: 'none',
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+    // Mozilla Firefox
+    sliderThumbMoz: {
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+  };
+  
+  // Update the input range elements to use the custom styles
+  const CustomSlider = ({ label, value, min, max, step, onChange, midiControl }) => (
+    <div style={sliderStyles.container}>
+      <label>{label}</label>
+      {midiAvailable && midiControl && (
+        <button onClick={() => listenForControl(midiControl)}>
+          Listen for {midiControl}
+        </button>
+      )}
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        style={{
+          ...sliderStyles.slider,
+          '::-webkit-slider-thumb': sliderStyles.sliderThumb,
+          '::-moz-range-thumb': sliderStyles.sliderThumbMoz,
+        }}
+      />
+    </div>
+  );
+  
+
   return (
-    <div className="samplerr-container  bg-black">
-      <button onClick={onBack}>Back</button>
+
+    
+    <div className="samplerr-container shadow-lg p-2 mb-2 bg-body-tertiary rounded"
+    style={{
+      // backgroundImage: `url(${buttonImage})`,
+      // backgroundSize: 'cover',
+      // backgroundPosition: 'center',
+      // width: '100%',
+      // height: '100%',
+    }}
+        >
+      
       <div
-        className="sample-grid"
+        className=""
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 100px)',
+          gridTemplateColumns: 'repeat(3, 125px)',
           gridGap: '4px',
           justifyContent: 'center',
         }}
@@ -346,14 +438,14 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
             id={pad.id}
             onClick={() => selectSample(pad.id)}
             style={{
-              width: '100px',
-              height: '100px',
+              width: '100%',
+              aspectRatio: '1',
               border:
               selectedSampleIndex === pad.id ? '2px solid yellow' : '2px solid #444',
               cursor: 'pointer',
             }}
           >
-            <img
+            <img className=""
               src={pad.image}
               alt={`Pad ${pad.id}`}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -363,7 +455,8 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
       </div>
 
       {trackLoaded ? (
-        <div className="controls " style={{ marginTop: '20px' }}>
+        <div className="controls  " 
+        style={{ marginTop: '20px' }}>
           <div>
             <label>
               Start Time: {formatTime(selectedSampleIndex * baseSampleDuration)}
@@ -372,79 +465,75 @@ const Samplerr = ({ audioUrl, imageUrl, onBack }) => {
           <div>
             <label>Sample Length: {formatTime(sampleLengthValue)}</label>
           </div>
+          <CustomSlider
+        label={`BPM: ${bpmSliderValue} BPM`}
+        value={bpmSliderValue}
+        min={60}
+        max={180}
+        step={1}
+        onChange={(e) => handleBpmChange(Number(e.target.value))}
+        midiControl="bpm"
+      />
 
-          <div style={{ marginTop: '10px' }}>
-            <label>BPM: {bpmSliderValue} BPM</label>
-            {midiAvailable && (
-              <button onClick={() => listenForControl('bpm')}>Listen for BPM</button>
-            )}
-            <input
-              type="range"
-              min="60"
-              max="180"
-              value={bpmSliderValue}
-              onChange={(e) => handleBpmChange(Number(e.target.value))}
-            />
-          </div>
+          <CustomSlider
+        label={`Sample Length: ${sampleLengthValue.toFixed(2)}s`}
+        value={sampleLengthValue}
+        min={0}
+        max={sampleDuration}
+        step={0.01}
+        onChange={(e) => handleSampleLengthChange(Number(e.target.value))}
+        midiControl="sampleLength"
+      />
 
-          <div style={{ marginTop: '10px' }}>
-            <label>Sample Length: {sampleLengthValue.toFixed(2)}s</label>
-            {midiAvailable && (
-              <button onClick={() => listenForControl('sampleLength')}>
-                Listen for Sample Length
-              </button>
-            )}
-            <input
-              type="range"
-              min="0"
-              max={sampleDuration}
-              step="0.01"
-              value={sampleLengthValue}
-              onChange={(e) => handleSampleLengthChange(Number(e.target.value))}
-            />
-          </div>
+      <CustomSlider
+        label={`Sample Start: ${formatTime(sampleStartValue)}`}
+        value={sampleStartValue}
+        min={0}
+        max={sampleDuration}
+        step={0.01}
+        onChange={(e) => handleSampleStartChange(Number(e.target.value))}
+        midiControl="sampleStart"
+      />
+      <CustomSlider
+        label="Volume"
+        value={volumeValue}
+        min={0}
+        max={1}
+        step={0.01}
+        onChange={(e) => adjustVolume(Number(e.target.value))}
+        midiControl="volume"
+      />
 
-          <div style={{ marginTop: '10px' }}>
-            <label>Sample Start: {formatTime(sampleStartValue)}</label>
-            {midiAvailable && (
-              <button onClick={() => listenForControl('sampleStart')}>
-                Listen for Sample Start
-              </button>
-            )}
-            <input
-              type="range"
-              min="0"
-              max={sampleDuration}
-              step="0.01"
-              value={sampleStartValue}
-              onChange={(e) => handleSampleStartChange(Number(e.target.value))}
-            />
-          </div>
-
-          <div style={{ marginTop: '10px' }}>
-            <label>Volume</label>
-            {midiAvailable && (
-              <button onClick={() => listenForControl('volume')}>
-                Listen for Volume
-              </button>
-            )}
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volumeValue}
-              onChange={(e) => adjustVolume(Number(e.target.value))}
-            />
-          </div>
-          <div style={{ marginTop: '10px' }}>
-  <label>
+         
+<label>
     Looping: {isLooping ? 'On' : 'Off'}
     <button onClick={toggleLoop} style={{ marginLeft: '10px' }}>
       {isLooping ? 'Turn Off' : 'Turn On'}
     </button>
   </label>
-</div>
+<img
+              src={buttonImage}
+              alt="Back Button"
+              className='hover:scale-110 transition-transform'
+              style={{
+                position: 'absolute',
+                bottom: '20px',
+                right: '20px',
+               
+                cursor: 'pointer',
+                zIndex: 1,
+                width: '20vw',
+                height: 'auto',
+                transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              }}
+              onClick={() => {
+                setIsFlipping(true);
+                onBack();
+                console.log('Button clicked');
+              }}
+            />
+
+
         </div>
       ) : (
         <p>Loading...</p>

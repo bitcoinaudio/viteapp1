@@ -340,10 +340,11 @@ export default function App() {
         ) : (
           <Samplerr
             audioUrl={audioUrl}
-            imageUrl={imageUrl}
+            imageUrl={imageUrl}            
             onBack={() => {
               setShowSamplerrComponent(false);
             }}
+            buttonImage={buttonImage}
           />
         )}
       </div>
