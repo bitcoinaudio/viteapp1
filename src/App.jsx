@@ -23,8 +23,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-var ins_id = urlarray[urlarray.length - 1];
-// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+//var ins_id = urlarray[urlarray.length - 1];
+var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -173,6 +173,7 @@ export default function App() {
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
   const [showColorGrid, setShowColorGrid] = useState(false);
+  const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [loadCount, setLoadCount] = useState(
     parseInt(localStorage.getItem('loadCount') || '0') + 1
   );
@@ -182,7 +183,7 @@ export default function App() {
   const [audioUrl, setAudioUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [buttonImage, setButtonImage] = useState(() => {
-    const random = Math.random() * 100; // Generate number between 0-100
+  const random = Math.random() * 100; // Generate number between 0-21
     
     // Rarity distribution:
     // coin1: 30% (most common)
@@ -191,11 +192,11 @@ export default function App() {
     // coin4: 15%
     // coin5: 8%
     // coin6: 2% (rarest)
-    if (random < 40) return 'colorGrid';
-    if (random < 75) return coin1;
+    if (random < 80) return 'colorGrid';
+    // if (random < 70) return coin1;
     if (random < 80) return coin2;
-    if (random < 85) return coin3;
-    if (random < 92) return coin4;
+    if (random < 80) return coin3;
+    if (random < 94) return coin4;
     if (random < 98) return coin5;
     return coin6;
   });
@@ -276,12 +277,11 @@ export default function App() {
                 <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
                   <VinylRecord 
                     text={text}
-                    onClick={() => setShowColorGrid(!showColorGrid)}
+                    
                   />
                 </div>
                 <ColorGrid 
-                  isLarge={showColorGrid} 
-                  onClick={() => setShowColorGrid(!showColorGrid)}
+                  onClick={() => {setShowSamplerrComponent(true); setShowVinylRecord(false);}}
                 />
               </>
             ) : (
@@ -338,12 +338,14 @@ export default function App() {
             )}
           </>
         ) : (
+          
           <Samplerr
             audioUrl={audioUrl}
             imageUrl={imageUrl}            
             onBack={() => {
               setShowSamplerrComponent(false);
             }}
+            
             buttonImage={buttonImage}
           />
         )}
