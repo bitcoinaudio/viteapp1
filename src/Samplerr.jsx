@@ -1,9 +1,10 @@
 // Samplerr.jsx
 import React, { useState, useEffect, useRef } from 'react';
  
- const numSamples = 12;
+const numSamples = 12;
 const defaultBPM = 91.5;
 export const ordArray = [
+   
     {
            id: 1,
            name: 'Rare Scrilla',
