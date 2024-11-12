@@ -23,8 +23,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-//var ins_id = urlarray[urlarray.length - 1];
-var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+var ins_id = urlarray[urlarray.length - 1];
+// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -250,7 +250,7 @@ export default function App() {
   
   const url = "https://arweave.net/"; // or "localhost"
   const local = "localhost";
-  checkCORS(url);
+  checkCORS(local);
   
     // If you need to clean up (analogous to componentWillUnmount), return a function:
     return () => {
@@ -364,9 +364,8 @@ export default function App() {
   } else {
     return (
     <iframe 
-        // src="https://arweave.net/orpWhkJBqC1YXAhGSepRdY3Il6zlQ-4sOmxe-fVnRvk"
-        src="https://bitcoinaudio.co"
-        style={{
+        src="https://arweave.net/ml05xf2_JpNGZNygviKlq1BCkvEkGMYhbA-AQEbSwoI"
+         style={{
           position: 'fixed',
           top: 0,
           left: 0,
