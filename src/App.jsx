@@ -193,7 +193,7 @@ export default function App() {
     // coin5: 8%
     // coin6: 2% (rarest)
     if (random < 80) return 'colorGrid';
-    // if (random < 70) return coin1;
+    if (random < 70) return coin1;
     if (random < 80) return coin2;
     if (random < 80) return coin3;
     if (random < 94) return coin4;
