@@ -205,9 +205,12 @@ export default function App() {
     localStorage.setItem('loadCount', loadCount.toString());
  
         // setShowSamplerrThumbnail(true);
-      const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
-      setAudioUrl(randomOrd.audio);
-      setImageUrl(randomOrd.image);
+        if(!showVinylRecord) {
+          const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
+          setAudioUrl(randomOrd.audio);
+          setImageUrl(randomOrd.image);
+        }
+ 
 
      if (isFlipping) {
       const timer = setTimeout(() => {
@@ -247,7 +250,7 @@ export default function App() {
   
   const url = "https://arweave.net/"; // or "localhost"
   const local = "localhost";
-  checkCORS(local);
+  checkCORS(url);
   
     // If you need to clean up (analogous to componentWillUnmount), return a function:
     return () => {
@@ -281,7 +284,14 @@ export default function App() {
                   />
                 </div>
                 <ColorGrid 
-                  onClick={() => {setShowSamplerrComponent(true); setShowVinylRecord(false);}}
+
+                  onClick={() => {
+                    setAudioUrl("https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0");
+                    setImageUrl("https://ordinals.com/content/9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0");
+                    setShowSamplerrComponent(true); 
+                    setShowVinylRecord(false);
+                    setButtonImage("https://ordinals.com/content/9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0")
+                  }}
                 />
               </>
             ) : (
