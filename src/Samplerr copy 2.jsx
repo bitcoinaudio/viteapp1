@@ -1,168 +1,191 @@
 // Samplerr.jsx
 import React, { useState, useEffect, useRef } from 'react';
- import styled from 'styled-components';
-
-const numSamples = 12;
-const defaultBPM = 91.5;
-export const ordArray = [
-  {
-    id: 1,
-    name: 'Rare Scrilla',
-    alias: 'Rare_Scrilla',
-    audio:
-      'https://ordinals.com/content/29eee78e1de8a6c10aa85aa79e2ab47ab0481964f7856ab39425811656d4a757i0',
-    image:
-      'https://ordinals.com/content/923e1b0253a09c01e46c0c3e7f51404970ab30544e555c3fcccddfa5d78d5ee7i0',
-  },
-  {
-    id: 2,
-    name: 'Rare Scrilla',
-    alias: 'Rare_Scrilla',
-    audio:
-      'https://ordinals.com/content/0dd65cb9dfa10d672c16e3741d73eead9085a710ff5f8796ef626799c85f944bi0',
-    image:
-      'https://ordinals.com/content/2b0be26d10f643c5fd719f59b8094ab6c94cd7660ddf6d6fadc6e0c8c0db5918i0',
-  },
-  {
-    id: 3,
-    name: 'Rare Scrilla',
-    alias: 'Rare_Scrilla',
-    audio:
-      'https://ordinals.com/content/ee21b5240619eab16b498afbcefb673285d5e39f3a597b4a6a54a34dec274a3ai0',
-    image:
-      'https://ordinals.com/content/3c058d094e10ccad06ffa0e97b8e147b315ee8d5c0dfe0376d61cfe520fa6fd5i0',
-  },
-  {
-    id: 4,
-    name: 'Rare Scrilla',
-    alias: 'Rare_Scrilla',
-    audio:
-      'https://ordinals.com/content/53f06b0bf1aa83d51b9d08e85fa952efd5792d79e81ee2d08003c550c3773121i0',
-    image:
-      'https://ordinals.com/content/3c4062f5e3433b997a92020f849fad8a82c7c2369a5c810a2f92ecdd61421e33i0',
-  },
-  {
-    id: 5,
-    name: 'Rare Scrilla',
-    alias: 'Rare Scrilla',
-    audio:
-      'https://ordinals.com/content/0dd65cb9dfa10d672c16e3741d73eead9085a710ff5f8796ef626799c85f944bi0',
-    image:
-      'https://ordinals.com/content/3c4062f5e3433b997a92020f849fad8a82c7c2369a5c810a2f92ecdd61421e33i0',
-  },
-  {
-    id: 6,
-    name: 'GFK',
-    alias: 'GFK',
-    audio:
-      'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0',
-    image:
-      'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0',
-  },
-];
-
-const SamplerrContainer = styled.div`
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  padding: 8px;
-  margin-bottom: 8px;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
-  position: relative;
-`;
-
-const SampleGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 125px);
-  grid-gap: 4px;
-  justify-content: center;
-`;
-
-const Pad = styled.div`
-  width: 100%;
-  aspect-ratio: 1;
-  border: ${(props) => (props.selected ? '2px solid yellow' : '2px solid #444')};
-  cursor: pointer;
-`;
+import styled from 'styled-components';
 
 const SliderContainer = styled.div`
   margin-top: 4px;
 `;
-
-const StyledSlider = styled.input.attrs({ type: 'range' })`
+const SliderInput = styled.input.attrs({ type: 'range' })`
   -webkit-appearance: none;
   width: 100%;
-  height: 6px;
+  height: 2px;
+  border-radius: 5px;
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
   transition: opacity 0.2s;
-  border-radius: 5px;
-
-  &:hover {
-    opacity: 1;
-  }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 25px;
     height: 25px;
-    background: #444;
-    border-radius: 50%;
+    background: url(${(props) => props.thumbImage});
+    background-size: cover;
+    background-position: center;
     cursor: pointer;
-    border: 2px solid #fff;
+    border: none;
+    border-radius: 50%;
   }
 
   &::-moz-range-thumb {
     width: 25px;
     height: 25px;
-    background: #444;
-    border-radius: 50%;
+    background: url(${(props) => props.thumbImage});
+    background-size: cover;
+    background-position: center;
     cursor: pointer;
-    border: 2px solid #fff;
+    border: none;
+    border-radius: 50%;
   }
 `;
+ 
+const numSamples = 12;
+const defaultBPM = 91.5;
+export const ordArray = [
+   
+    {
+           id: 1,
+           name: 'Rare Scrilla',
+           alias: 'Rare_Scrilla',
+           audio: 'https://ordinals.com/content/29eee78e1de8a6c10aa85aa79e2ab47ab0481964f7856ab39425811656d4a757i0',
+           image: 'https://ordinals.com/content/923e1b0253a09c01e46c0c3e7f51404970ab30544e555c3fcccddfa5d78d5ee7i0',
+        },
+       {
+           id: 2,
+           name: 'Rare Scrilla',
+           alias: 'Rare_Scrilla',
+           audio: 'https://ordinals.com/content/0dd65cb9dfa10d672c16e3741d73eead9085a710ff5f8796ef626799c85f944bi0',
+           image: 'https://ordinals.com/content/2b0be26d10f643c5fd719f59b8094ab6c94cd7660ddf6d6fadc6e0c8c0db5918i0',
+        },
+       {
+           id: 3,
+           name: 'Rare Scrilla',
+           alias: 'Rare_Scrilla',
+           audio: 'https://ordinals.com/content/ee21b5240619eab16b498afbcefb673285d5e39f3a597b4a6a54a34dec274a3ai0',
+           image: 'https://ordinals.com/content/3c058d094e10ccad06ffa0e97b8e147b315ee8d5c0dfe0376d61cfe520fa6fd5i0',
+        },
+       {
+           id: 4,
+           name: 'Rare Scrilla',
+           alias: 'Rare_Scrilla',
+           audio: 'https://ordinals.com/content/53f06b0bf1aa83d51b9d08e85fa952efd5792d79e81ee2d08003c550c3773121i0',
+           image: 'https://ordinals.com/content/3c4062f5e3433b997a92020f849fad8a82c7c2369a5c810a2f92ecdd61421e33i0',
+        },
+        {
+           id: 5,
+           name: 'Rare Scrilla',
+           alias: 'Rare Scrilla',
+           audio: 'https://ordinals.com/content/0dd65cb9dfa10d672c16e3741d73eead9085a710ff5f8796ef626799c85f944bi0',
+           image: 'https://ordinals.com/content/3c4062f5e3433b997a92020f849fad8a82c7c2369a5c810a2f92ecdd61421e33i0',
+        },
+        {
+          id: 6,
+          name: 'GFK',
+          alias: 'GFK',
+          audio: 'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0',
+          image: 'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0',
+       }
+   ];
+   
 
-const BackButton = styled.img`
-  padding: 10px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
-  z-index: 1;
-  width: 5vw;
-  height: auto;
-  transform: ${(props) => (props.isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)')};
-  transition: transform 0.6s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const CustomSlider = ({
-  label,
-  value,
-  min,
-  max,
-  step,
-  onChange,
-  midiControl,
-  midiAvailable,
-  listenForControl,
-  thumbImage,
-}) => (
-  <SliderContainer>
-    <label>{label}</label>
-    {midiAvailable && midiControl && (
-      <button onClick={() => listenForControl(midiControl)}>
-        Assign MIDI to {midiControl}
-      </button>
-    )}
-    <StyledSlider value={value} min={min} max={max} step={step} onChange={onChange} thumbImage={thumbImage} />
-  </SliderContainer>
-);
-
-const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
+   const SamplerrContainer = styled.div`
+   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+   padding: 8px;
+   margin-bottom: 8px;
+   background-color: #f8f9fa;
+   border-radius: 0.25rem;
+   position: relative;
+ `;
+ 
+ const SampleGrid = styled.div`
+   display: grid;
+   grid-template-columns: repeat(3, 125px);
+   grid-gap: 4px;
+   justify-content: center;
+ `;
+ 
+ const Pad = styled.div`
+   width: 100%;
+   aspect-ratio: 1;
+   border: ${(props) => (props.selected ? '2px solid yellow' : '2px solid #444')};
+   cursor: pointer;
+ `;
+ 
+ 
+ const StyledSlider = styled.input.attrs({ type: 'range' })`
+   -webkit-appearance: none;
+   width: 100%;
+   height: 6px;
+   background: #d3d3d3;
+   outline: none;
+   opacity: 0.7;
+   transition: opacity 0.2s;
+   border-radius: 5px;
+ 
+   &:hover {
+     opacity: 1;
+   }
+ 
+   &::-webkit-slider-thumb {
+     -webkit-appearance: none;
+     width: 25px;
+     height: 25px;
+     background: #444;
+     border-radius: 50%;
+     cursor: pointer;
+     border: 2px solid #fff;
+   }
+ 
+   &::-moz-range-thumb {
+     width: 25px;
+     height: 25px;
+     background: #444;
+     border-radius: 50%;
+     cursor: pointer;
+     border: 2px solid #fff;
+   }
+ `;
+ 
+ const BackButton = styled.img`
+   padding: 10px;
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+   cursor: pointer;
+   z-index: 1;
+   width: 5vw;
+   height: auto;
+   transform: ${(props) => (props.isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)')};
+   transition: transform 0.6s;
+ 
+   &:hover {
+     transform: scale(1.1);
+   }
+ `;
+ 
+ const CustomSlider = ({
+   label,
+   value,
+   min,
+   max,
+   step,
+   onChange,
+   midiControl,
+   midiAvailable,
+   listenForControl,
+   thumbImage,
+ }) => (
+   <SliderContainer>
+     <label>{label}</label>
+     {midiAvailable && midiControl && (
+       <button onClick={() => listenForControl(midiControl)}>
+         Assign MIDI to {midiControl}
+       </button>
+     )}
+     <StyledSlider value={value} min={min} max={max} step={step} onChange={onChange} thumbImage={thumbImage} />
+   </SliderContainer>
+ );
+const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
   // States
   const [isFlipping, setIsFlipping] = useState(false);
   const [player, setPlayer] = useState(null);
@@ -191,14 +214,13 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   const [currentSample, setCurrentSample] = useState({ audioUrl, imageUrl });
   const midiAccessRef = useRef(null);
 
-  const [samplePads, setSamplePads] = useState([]);
-
   // Initialize Tone.Player and load image
   useEffect(() => {
     loadSoundAndImage(currentSample.audioUrl, currentSample.imageUrl);
     if (isFlipping) {
       const timer = setTimeout(() => {
         setIsFlipping(false);
+        setShowSamplerrComponent(true);
       }, 150); // Match this duration with CSS transition
       return () => clearTimeout(timer);
     }
@@ -230,12 +252,12 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     if (player) {
       player.dispose();
     }
-
+    
     setCurrentSample({
       audioUrl: newAudioUrl,
-      imageUrl: newImageUrl,
+      imageUrl: newImageUrl
     });
-
+    
     // Reset states as needed
     setSelectedSampleIndex(-1);
     setTrackLoaded(false);
@@ -323,6 +345,8 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     // Set the sample pads in state
     setSamplePads(pads);
   };
+
+  const [samplePads, setSamplePads] = useState([]);
 
   const selectSample = (index) => {
     setSelectedSampleIndex(index);
@@ -417,40 +441,64 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   };
 
   const handleMIDIMessage = (event) => {
-    const [status, data1, data2] = event.data;
-    const command = status & 0xf0;
-    const note = data1;
-    const velocity = data2 / 127;
+    const data = event.data;
+    const command = data[0] & 0xf0;
+    const channel = data[0] & 0x0f;
+    const note = data[1];
+    const velocity = data[2];
 
-    // Handle MIDI note inputs
-    if (command === 0x90 && velocity > 0) {
-      const index = note - 36; // Map MIDI note to grid index
+    // Handle drum pads (channel 9)
+    if (channel === 9) {
+      if (command === 0x90 && velocity > 0) {
+            // Convert MIDI note to grid index starting from bottom left
+      const midiOffset = note - 36; // Assuming MIDI notes start at 36
+      const row = Math.floor(midiOffset / 4);
+      const col = midiOffset % 4;
+      
+       const index = row * 3 + col;
       if (index >= 0 && index < numSamples) {
         selectSample(index);
+        playSample(index, loopLengths[index]);
+       }
       }
-    }
+    } else if (channel === 0) {
+      if (command === 0x90 && velocity > 0) {
+      const midiOffset = note - 36; // Assuming MIDI notes start at 36
+      const row = Math.floor(midiOffset / 4);
+      const col = midiOffset % 4;
+      
+      const index = row * 3 + col;
+      if (index >= 0 && index < numSamples) {
+        selectSample(index);
+        playSample(index, loopLengths[index]);
+      }
+      }
+    } 
+    // Handle Control Change messages (knobs/sliders)
+    else if (command === 0xb0) {
+      const control = note;
+      const value = velocity / 127;
 
-    // Handle Control Change messages
-    if (command === 0xb0) {
       if (listeningFor) {
-        // Assign MIDI control to a parameter
+        // Learning mode - assign control to parameter
         setMidiAssignments((prev) => {
-          const updated = { ...prev, [listeningFor]: data1 };
-          localStorage.setItem('midiAssignments', JSON.stringify(updated));
-          return updated;
+          const newAssignments = { ...prev, [listeningFor]: control };
+          localStorage.setItem('midiAssignments', JSON.stringify(newAssignments));
+          return newAssignments;
         });
-        alert(`Assigned control ${data1} to ${listeningFor}`);
+        alert(`Assigned control ${control} to ${listeningFor}`);
         setListeningFor(null);
       } else {
-        // Adjust parameters based on MIDI control
-        const control = data1;
-        if (control === midiAssignments.volume) adjustVolume(velocity);
-        if (control === midiAssignments.bpm)
-          handleBpmChange(Math.round(velocity * 180));
-        if (control === midiAssignments.sampleStart)
-          handleSampleStartChange(velocity * sampleDuration);
-        if (control === midiAssignments.sampleLength)
-          handleSampleLengthChange(velocity * sampleDuration);
+        // Normal mode - use control
+        if (control === midiAssignments.volume) {
+          adjustVolume(value);
+        } else if (control === midiAssignments.bpm) {
+          handleBpmChange(Math.round(value * 180));
+        } else if (control === midiAssignments.sampleStart) {
+          handleSampleStartChange(value * sampleDuration);
+        } else if (control === midiAssignments.sampleLength) {
+          handleSampleLengthChange(value * sampleDuration);
+        }
       }
     }
   };
@@ -469,7 +517,77 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     return `${minutes}:${seconds}`;
   };
 
+  const sliderStyles = {
+    container: {
+      marginTop: '4px',
+    },
+    slider: {
+      WebkitAppearance: 'none',
+      width: '100%',
+      height: '2px',
+      borderRadius: '5px',
+      background: '#d3d3d3',
+      outline: 'none',
+      opacity: '0.7',
+      transition: 'opacity .2s',
+    },
+    // Webkit (Chrome, Safari, newer versions of Opera)
+    sliderThumb: {
+      WebkitAppearance: 'none',
+      appearance: 'none',
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+    // Mozilla Firefox
+    sliderThumbMoz: {
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+  };
+  
+  const CustomSlider = ({
+    label,
+    value,
+    min,
+    max,
+    step,
+    onChange,
+    midiControl,
+    thumbImage,
+  }) => (
+    <SliderContainer>
+      <label>{label}</label>
+      {midiAvailable && midiControl && (
+        <button onClick={() => listenForControl(midiControl)}>
+          Listen for {midiControl}
+        </button>
+      )}
+      <SliderInput
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        thumbImage={thumbImage}
+      />
+    </SliderContainer>
+  );
+  
+
   return (
+
     <SamplerrContainer>
       <SampleGrid>
         {samplePads.map((pad) => (
@@ -563,7 +681,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
         <p>Loading...</p>
       )}
     </SamplerrContainer>
-
   );
 };
 

@@ -1,9 +1,10 @@
 // Samplerr.jsx
 import React, { useState, useEffect, useRef } from 'react';
- import styled from 'styled-components';
+import styled from 'styled-components';
 
 const numSamples = 12;
 const defaultBPM = 91.5;
+
 export const ordArray = [
   {
     id: 1,
@@ -87,6 +88,39 @@ const Pad = styled.div`
 const SliderContainer = styled.div`
   margin-top: 4px;
 `;
+const SliderInput = styled.input.attrs({ type: 'range' })`
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 25px;
+    height: 25px;
+    background: url(${(props) => props.thumbImage});
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+  }
+
+  &::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: url(${(props) => props.thumbImage});
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+  }
+`;
 
 const StyledSlider = styled.input.attrs({ type: 'range' })`
   -webkit-appearance: none;
@@ -158,8 +192,8 @@ const CustomSlider = ({
         Assign MIDI to {midiControl}
       </button>
     )}
-    <StyledSlider value={value} min={min} max={max} step={step} onChange={onChange} thumbImage={thumbImage} />
-  </SliderContainer>
+     <StyledSlider value={value} min={min} max={max} step={step} onChange={onChange} thumbImage={thumbImage} />
+   </SliderContainer>
 );
 
 const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
@@ -191,7 +225,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   const [currentSample, setCurrentSample] = useState({ audioUrl, imageUrl });
   const midiAccessRef = useRef(null);
 
-  const [samplePads, setSamplePads] = useState([]);
 
   // Initialize Tone.Player and load image
   useEffect(() => {
@@ -323,6 +356,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     // Set the sample pads in state
     setSamplePads(pads);
   };
+  const [samplePads, setSamplePads] = useState([]);
 
   const selectSample = (index) => {
     setSelectedSampleIndex(index);
@@ -468,6 +502,75 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     }
     return `${minutes}:${seconds}`;
   };
+
+  const sliderStyles = {
+    container: {
+      marginTop: '4px',
+    },
+    slider: {
+      WebkitAppearance: 'none',
+      width: '100%',
+      height: '2px',
+      borderRadius: '5px',
+      background: '#d3d3d3',
+      outline: 'none',
+      opacity: '0.7',
+      transition: 'opacity .2s',
+    },
+    // Webkit (Chrome, Safari, newer versions of Opera)
+    sliderThumb: {
+      WebkitAppearance: 'none',
+      appearance: 'none',
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+    // Mozilla Firefox
+    sliderThumbMoz: {
+      width: '25px',
+      height: '25px',
+      background: `url(${buttonImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      borderRadius: '50%',
+    },
+  };
+  
+  const CustomSlider = ({
+    label,
+    value,
+    min,
+    max,
+    step,
+    onChange,
+    midiControl,
+    thumbImage,
+  }) => (
+    <SliderContainer>
+      <label>{label}</label>
+      {midiAvailable && midiControl && (
+        <button onClick={() => listenForControl(midiControl)}>
+          Listen for {midiControl}
+        </button>
+      )}
+      <SliderInput
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        thumbImage={thumbImage}
+      />
+    </SliderContainer>
+  );
+
 
   return (
     <SamplerrContainer>
