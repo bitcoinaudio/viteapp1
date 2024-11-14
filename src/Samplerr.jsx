@@ -318,7 +318,19 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
         playSample(index, loopLengths[index]);
        }
       }
-    }
+    } else if (channel === 0) {
+      if (command === 0x90 && velocity > 0) {
+      const midiOffset = note - 36; // Assuming MIDI notes start at 36
+      const row = Math.floor(midiOffset / 4);
+      const col = midiOffset % 4;
+      
+      const index = row * 3 + col;
+      if (index >= 0 && index < numSamples) {
+        selectSample(index);
+        playSample(index, loopLengths[index]);
+      }
+      }
+    } 
     // Handle Control Change messages (knobs/sliders)
     else if (command === 0xb0) {
       const control = note;
@@ -498,7 +510,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
         value={sampleLengthValue}
         min={0}
         max={sampleDuration}
-        step={0.01}
+        step={0.1}
         onChange={(e) => handleSampleLengthChange(Number(e.target.value))}
         midiControl="sampleLength"
       />
@@ -508,7 +520,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
         value={sampleStartValue}
         min={0}
         max={sampleDuration}
-        step={0.01}
+        step={0.1}
         onChange={(e) => handleSampleStartChange(Number(e.target.value))}
         midiControl="sampleStart"
       />
@@ -517,7 +529,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage   }) => {
         value={volumeValue}
         min={0}
         max={1}
-        step={0.01}
+        step={0.1}
         onChange={(e) => adjustVolume(Number(e.target.value))}
         midiControl="volume"
       />
