@@ -1,0 +1,25 @@
+ <img
+                  src={imageUrl}
+                  alt="Samplerr Thumbnail"
+                  style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    right: '20px',
+                    height: '300px',
+                    cursor: 'pointer',
+                    zIndex: 1,
+                  }}
+                  onClick={() => setShowSamplerrComponent(true)}
+                />
+              )}
+            </>
+          ) : (
+            <Samplerr
+              audioUrl={audioUrl}
+              imageUrl={imageUrl}
+              onBack={() => {
+                setShowSamplerrComponent(false);
+              }}
+              buttonImage={buttonImage}
+            />
+          )

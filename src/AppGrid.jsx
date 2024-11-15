@@ -287,11 +287,9 @@ export default function App() {
           alignItems: 'center',
           height: '100vh',
         }}
-      >
-        {corsSuccess === true ? (
-          !showSamplerrComponent ? (
-            <>
-              {buttonImage === 'colorGrid' ? (
+      >        
+          {!showSamplerrComponent ? (
+            <> 
                 <VinylRecord
                   text={text}
                   onClick={() => {
@@ -309,25 +307,7 @@ export default function App() {
                   }}
                   buttonImage={buttonImage}
                 />
-              ) : (
-                <VinylRecord
-                  text={text}
-                  onClick={() => {
-                    setAudioUrl(
-                      'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'
-                    );
-                    setImageUrl(
-                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
-                    );
-                    setShowSamplerrComponent(true);
-                    setShowVinylRecord(false);
-                    setButtonImage(
-                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
-                    );
-                  }}
-                  buttonImage={buttonImage}
-                />
-              )}
+              
 
               {showSamplerrThumbnail && (
                 <img
@@ -354,29 +334,11 @@ export default function App() {
               }}
               buttonImage={buttonImage}
             />
-          )
-        ) : (
-          <iframe
-            src="https://arweave.net/ml05xf2_JpNGZNygviKlq1BCkvEkGMYhbA-AQEbSwoI"
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              width: '100%',
-              height: '100%',
-              border: 'none',
-              margin: 0,
-              padding: 0,
-              overflow: 'hidden',
-            }}
-            title="Fullscreen Content"
-          />
-        )}
+          )}
+        
       </div>
     </div>
-    )
+    );
   } else {
     return (
     <iframe 
@@ -395,7 +357,8 @@ export default function App() {
           overflow: 'hidden'
         }}
         title="Fullscreen Content"
-      />    )
-  }
+      />   
+     )
+  };
 
 }
