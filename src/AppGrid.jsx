@@ -20,8 +20,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-// var ins_id = urlarray[urlarray.length - 1];
-var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+var ins_id = urlarray[urlarray.length - 1];
+// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -73,7 +73,15 @@ function VinylRecord({ text, onClick }) {
 
       {/* Center label */}
       <circle cx="150" cy="150" r="45" fill="white" />
-      <text
+      <image
+        href={"https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0"}
+        x="105"
+        y="105"
+        width="100"
+        height="100"
+        clipPath="circle(40px at 45px 45px)"
+      />
+      {/* <text
         x="150"
         y="150"
         textAnchor="middle"
@@ -83,7 +91,7 @@ function VinylRecord({ text, onClick }) {
         fontFamily="Arial"
       >
         {text}
-      </text>
+      </text> */}
     </svg>
   );
 }
@@ -239,78 +247,122 @@ export default function App() {
 
   if (corsSuccess === true) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        position: 'relative',
-      }}>
-        {!showSamplerrComponent ? (
-          <>
-            {buttonImage === 'colorGrid' ? (
-              // ColorGrid + VinylRecord pair
-              <>
-                <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
-                  <VinylRecord text={text}  />
-                </div>
-                <ColorGrid   onClick={() => {
-                    setAudioUrl("https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0");
-                    setImageUrl("./headphones.jpg");
-                    setShowSamplerrComponent(true); 
-                    setShowVinylRecord(false);
-                    setButtonImage("./headphones.jpg")
-                  }}
-                />
+      <div>
+      {/* Blurred Background */}
+      <div
+        style={{
+          backgroundImage: `url("https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(10px)',
+          height: '100vh',
+          width: '100vw',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        }}
+      />
 
-              </>
-            ) : (
-              // ColorGrid + VinylRecord pair
-              <>
-                <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
-                  <VinylRecord text={text}  />
-                </div>
-                <ColorGrid   onClick={() => {
-                    setAudioUrl("https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0");
-                    setImageUrl("./headphones.jpg");
-                    setShowSamplerrComponent(true); 
+      {/* Main Content */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        {corsSuccess === true ? (
+          !showSamplerrComponent ? (
+            <>
+              {buttonImage === 'colorGrid' ? (
+                <VinylRecord
+                  text={text}
+                  onClick={() => {
+                    setAudioUrl(
+                      'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'
+                    );
+                    setImageUrl(
+                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
+                    );
+                    setShowSamplerrComponent(true);
                     setShowVinylRecord(false);
-                    setButtonImage("./headphones.jpg")
+                    setButtonImage(
+                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
+                    );
                   }}
+                  buttonImage={buttonImage}
                 />
-                
-              </>
-            )}
-  
-            {showSamplerrThumbnail && (
-              <img
-                src={imageUrl}
-                alt="Samplerr Thumbnail"
-                style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  right: '20px',
-                  height: '300px',
-                  cursor: 'pointer',
-                  zIndex: 1,
-                }}
-                onClick={() => setShowSamplerrComponent(true)}
-              />
-            )}
-          </>
+              ) : (
+                <VinylRecord
+                  text={text}
+                  onClick={() => {
+                    setAudioUrl(
+                      'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'
+                    );
+                    setImageUrl(
+                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
+                    );
+                    setShowSamplerrComponent(true);
+                    setShowVinylRecord(false);
+                    setButtonImage(
+                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
+                    );
+                  }}
+                  buttonImage={buttonImage}
+                />
+              )}
+
+              {showSamplerrThumbnail && (
+                <img
+                  src={imageUrl}
+                  alt="Samplerr Thumbnail"
+                  style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    right: '20px',
+                    height: '300px',
+                    cursor: 'pointer',
+                    zIndex: 1,
+                  }}
+                  onClick={() => setShowSamplerrComponent(true)}
+                />
+              )}
+            </>
+          ) : (
+            <Samplerr
+              audioUrl={audioUrl}
+              imageUrl={imageUrl}
+              onBack={() => {
+                setShowSamplerrComponent(false);
+              }}
+              buttonImage={buttonImage}
+            />
+          )
         ) : (
-          
-          <Samplerr
-            audioUrl={audioUrl}
-            imageUrl={imageUrl}            
-            onBack={() => {
-              setShowSamplerrComponent(false);
+          <iframe
+            src="https://arweave.net/ml05xf2_JpNGZNygviKlq1BCkvEkGMYhbA-AQEbSwoI"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              margin: 0,
+              padding: 0,
+              overflow: 'hidden',
             }}
-            
-            buttonImage={buttonImage}
+            title="Fullscreen Content"
           />
         )}
       </div>
+    </div>
     )
   } else {
     return (

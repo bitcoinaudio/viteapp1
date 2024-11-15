@@ -550,11 +550,14 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
             thumbImage={buttonImage}
           />
 
-          <label>
+          <label className="flex items-center">
             Looping: {isLooping ? 'On' : 'Off'}
-            <button onClick={toggleLoop} style={{ marginLeft: '10px' }}>
-              {isLooping ? 'Turn Off' : 'Turn On'}
-            </button>
+            <input
+              type="checkbox"
+              className="toggle toggle-primary ml-2"
+              checked={isLooping}
+              onChange={toggleLoop}
+            />
           </label>
          
           
