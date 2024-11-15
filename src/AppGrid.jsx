@@ -21,7 +21,7 @@ const coinStyle = {
 var url = window.location.pathname;
 var urlarray = url.split("/");
 var ins_id = urlarray[urlarray.length - 1];
-// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+//var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -154,7 +154,7 @@ const ColorGrid = ({ isLarge, onClick }) => {
     </div>
   );
 };
-
+const gradientColors = colors.join(', ');
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
    const [text, setText] = useState('The Ides of March');
@@ -263,6 +263,19 @@ export default function App() {
           zIndex: -1,
         }}
       />
+       {/* Gradient Overlay */}
+       <div
+          style={{
+            background: `linear-gradient(45deg, ${gradientColors})`, // Example gradient
+            // opacity: 0.5, // Adjust opacity for desired effect
+            height: '100vh',
+            width: '100vw',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: -1, // Positioned above the blurred background
+          }}
+        />
 
       {/* Main Content */}
       <div

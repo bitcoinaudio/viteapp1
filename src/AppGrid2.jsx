@@ -88,7 +88,7 @@ export default function App() {
         {/* Blurred Background */}
         <div
           style={{
-            backgroundImage: `url(${buttonImage})`,
+            backgroundImage: `url(${"https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0"})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(10px)',
