@@ -184,8 +184,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('loadCount', loadCount.toString());
- 
+  
         // setShowSamplerrThumbnail(true);
         if(!showVinylRecord) {
           const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
@@ -231,11 +230,9 @@ export default function App() {
     }  
   
   const url = "https://arweave.net/"; // or "localhost"
-  const local = "localhost";
-  checkCORS(local);
+   checkCORS(url);
   
-    // If you need to clean up (analogous to componentWillUnmount), return a function:
-    return () => {
+     return () => {
       console.log('Component will unmount');
       
     };
@@ -248,8 +245,7 @@ export default function App() {
   if (corsSuccess === true) {
     return (
       <div>
-      {/* Blurred Background */}
-      <div
+       <div
         style={{
           backgroundImage: `url("https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0")`,
           backgroundSize: 'cover',
@@ -263,8 +259,7 @@ export default function App() {
           zIndex: -1,
         }}
       />
-       {/* Gradient Overlay */}
-       <div
+        <div
           style={{
             background: `linear-gradient(45deg, ${gradientColors})`, // Example gradient
             // opacity: 0.5, // Adjust opacity for desired effect
@@ -277,8 +272,7 @@ export default function App() {
           }}
         />
 
-      {/* Main Content */}
-      <div
+       <div
         style={{
           position: 'relative',
           zIndex: 1,
