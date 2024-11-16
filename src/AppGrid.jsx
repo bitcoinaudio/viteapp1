@@ -163,12 +163,6 @@ export default function App() {
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
   const [showColorGrid, setShowColorGrid] = useState(false);
   const [showVinylRecord, setShowVinylRecord] = useState(false);  
-  const [loadCount, setLoadCount] = useState(
-    parseInt(localStorage.getItem('loadCount') || '0') + 1
-  );
-  const [clickCount, setClickCount] = useState(
-    parseInt(localStorage.getItem('clickCount') || '0')
-  );
   const [audioUrl, setAudioUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [buttonImage, setButtonImage] = useState(() => {
@@ -184,8 +178,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('loadCount', loadCount.toString());
- 
+  
         // setShowSamplerrThumbnail(true);
         if(!showVinylRecord) {
           const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
@@ -332,7 +325,7 @@ export default function App() {
               onBack={() => {
                 setShowSamplerrComponent(false);
               }}
-              buttonImage={buttonImage}
+              
             />
           )}
         
