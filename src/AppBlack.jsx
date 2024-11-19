@@ -247,7 +247,7 @@ export default function App() {
   } else {
     return (
     <iframe 
-        src="https://arweave.net/ml05xf2_JpNGZNygviKlq1BCkvEkGMYhbA-AQEbSwoI"
+        src="https://arweave.net/aGBEWPHQ2TT7rT7af2w40BbIDSEgx9tpykFtaNstqqk"
          style={{
           position: 'fixed',
           top: 0,
