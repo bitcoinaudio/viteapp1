@@ -1,23 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import Samplerr, { ordArray } from './Samplerr.jsx';
-let coin1 = 'https://ordinals.com/content/0e113d456b01a5d008c7f0da74eef02ea9a7315d74a6ba6299425d47036909bdi0';
-let coin2 = 'https://ordinals.com/content/bf7561a8d27133a3e1144ac49ae1c24ac263f4271d5cf07f151740b3f3c3c54ci0';
-let coin3 = 'https://ordinals.com/content/9d05e297b0e32bd4c955914c03c406eb98635fd805a7c01340f89660aea69ad4i0';
-let coin4 = 'https://ordinals.com/content/503b48a1b7c209c88467fb76773ee3d6215a2a32d3771a9479d76034d315c9eei0';
-let coin5 = 'https://ordinals.com/content/5fab883761387f948b62fcd7e2c58fae14fc22338783d641d489154fa3de4d9fi0';
-let coin6 = 'https://ordinals.com/content/9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0';
+import Samplerr from './Samplerr.jsx';
+import { ordArray, vinylLables } from './ordArray.js';
 
-const coinStyle = {
-  position: 'absolute',
-  bottom: '20px',
-  right: '20px',
-  height: '600px',
-  cursor: 'pointer',
-  zIndex: 1,
-  transition: 'transform 0.15s ease-in-out',
-  transformStyle: 'preserve-3d',
-};
-
+let randomLabel = vinylLables[Math.floor(Math.random() * vinylLables.length)];
+let randomLabelUrl = randomLabel.url; 
+ 
 var url = window.location.pathname;
 var urlarray = url.split("/");
 var ins_id = urlarray[urlarray.length - 1];
@@ -74,7 +61,7 @@ function VinylRecord({ text, onClick }) {
       {/* Center label */}
       <circle cx="150" cy="150" r="45" fill="white" />
       <image
-        href={"https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0"}
+        href={randomLabelUrl}
         x="105"
         y="105"
         width="100"
@@ -95,65 +82,7 @@ function VinylRecord({ text, onClick }) {
     </svg>
   );
 }
-const ColorGrid = ({ isLarge, onClick }) => {
-  const gridSize = isLarge ? '60vh' : '20vh';
-  const svgSize = isLarge ? 300 : 100;
-  const rectSize = svgSize / 3;
-  const expectedLength = 64;
 
-  if (id.length !== expectedLength) {
-    console.error('ins_id has unexpected length');
-    return null;
-  }
-
-  const localChunks = [];
-  const chunkSize = 7;
-  let index = 0;
-  for (let i = 0; i < 8; i++) {
-    localChunks.push(id.slice(index, index + chunkSize));
-    index += chunkSize;
-  }
-  localChunks.push(id.slice(index));
-
-  const localColors = localChunks.map(chunk => '#' + chunk.slice(0, 6));
-
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        position: isLarge ? 'fixed' : 'absolute',
-        bottom: isLarge ? '50%' : '20px',
-        right: isLarge ? '50%' : '20px',
-        transform: isLarge ? 'translate(50%, 50%)' : 'none',
-        width: gridSize,
-        height: gridSize,
-        gap: '1px',
-        background: '#333',
-        padding: '1px',
-        cursor: 'pointer',
-        zIndex: isLarge ? 10 : 1,
-      }}
-    >
-      <svg width="100%" height="100%" viewBox={`0 0 ${svgSize} ${svgSize}`}>
-        {localColors.map((color, idx) => {
-          const x = (idx % 3) * rectSize;
-          const y = Math.floor(idx / 3) * rectSize;
-          return (
-            <rect
-              key={idx}
-              x={x}
-              y={y}
-              width={rectSize}
-              height={rectSize}
-              fill={color}
-              stroke="black"
-            />
-          );
-        })}
-      </svg>
-    </div>
-  );
-};
 const gradientColors = colors.join(', ');
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
@@ -165,17 +94,7 @@ export default function App() {
   const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [audioUrl, setAudioUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [buttonImage, setButtonImage] = useState(() => {
-  const random = Math.random() * 100; // Generate number between 0-21
-   
-    if (random < 80) return 'colorGrid';
-    if (random < 70) return coin1;
-    if (random < 80) return coin2;
-    if (random < 80) return coin3;
-    if (random < 94) return coin4;
-    if (random < 98) return coin5;
-    return coin6;
-  });
+ 
 
   useEffect(() => {
   
@@ -200,10 +119,10 @@ export default function App() {
     function checkCORS(url) {
       if (url === "localhost") {
         setCorsSuccess(true);
-        console.log("CORS success (localhost)");
+        console.log("CORS success");
       } else if (url === "https://arweave.net/") {
         setCorsSuccess(false);
-        console.log("CORS failure (arweave.net)");
+        console.log("CORS failure");
       } else {
         // For any other URL, perform the actual CORS check
         fetch(url)
@@ -224,7 +143,7 @@ export default function App() {
     }  
   
   const url = "https://arweave.net/"; // or "localhost"
-   checkCORS(url);
+   checkCORS("localhost");
   
      return () => {
       console.log('Component will unmount');
@@ -241,7 +160,7 @@ export default function App() {
       <div>
        <div
         style={{
-          backgroundImage: `url("https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0")`,
+          backgroundImage: `url(${randomLabelUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'blur(10px)',
@@ -285,16 +204,13 @@ export default function App() {
                       'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'
                     );
                     setImageUrl(
-                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
+                      randomLabelUrl
                     );
                     setShowSamplerrComponent(true);
                     setShowVinylRecord(false);
-                    setButtonImage(
-                      'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0'
-                    );
+                    
                   }}
-                  buttonImage={buttonImage}
-                />
+                 />
               
 
               {showSamplerrThumbnail && (
