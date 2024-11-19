@@ -31,26 +31,10 @@ function VinylRecord({ text, onClick }) {
       onClick={onClick}
       style={{ cursor: 'pointer' }}
     >
-      {/* Define marble texture with turbulence and displacement */}
       <defs>
-        <filter id="noise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1"/>
-        </filter>
-        
-        {/* <radialGradient id="marbleGradient">
-          {colors.map((color, idx) => (
-            <stop
-              key={idx}
-              offset={`${(idx * 100) / (colors.length - 1)}%`}
-              stopColor={color}
-              stopOpacity="0.8"
-            />
-          ))}
-        </radialGradient> */}
-         <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
-          <feOffset in="blur" dx="4" dy="4" result="offsetBlur"/>
+          <feOffset in="blur" dx="4" dy="" result="offsetBlur"/>
           <feFlood floodColor="rgba(0,0,0,0.3)" result="shadowColor"/>
           <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadowBlur"/>
           <feMerge>
@@ -59,60 +43,69 @@ function VinylRecord({ text, onClick }) {
           </feMerge>
         </filter>
 
+        <filter id="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.5"/>
+        </filter>
+        
+        <linearGradient id="veinGradient" gradientTransform="rotate(45)">
+          {colors.map((color, idx) => (
+            <stop
+              key={idx}
+              offset={`${(idx * 100) / (colors.length - 1)}%`}
+              stopColor={color}
+              stopOpacity="0.8"
+            />
+          ))}
+        </linearGradient>
+
         <filter id="marbleTexture">
-          <feTurbulence type="turbulence" baseFrequency="0.2" numOctaves="7" seed="5" result="turb"/>
-          <feDisplacementMap in="SourceGraphic" in2="turb" scale="10"/>
+          <feTurbulence type="turbulence" baseFrequency="0.09" numOctaves="9" seed="100" result="turb"/>
+          <feDisplacementMap in="SourceGraphic" in2="turb" scale="5"/>
         </filter>
       </defs>
 
-      {/* Main marble disc */}
-      <circle
-        cx="150"
-        cy="150"
-        r="140"
-        fill="url(#marbleGradient)"
+      <g filter="url(#dropShadow)">
+        <circle 
+          cx="150" 
+          cy="150" 
+          r="145" 
+          fill="#f5f5f5"
+          // filter="url(#marbleTexture)"
+        />
+      </g>
 
-      />
-            <circle cx="150" cy="150" r="140" fill="#f5f5f5" opacity="0.6" />
+        {[...Array(8)].map((_, i) => (
+          <circle
+            key={i}
+            cx="150"
+            cy="150"
+            r={140 - i * 15}
+            fill="none"
+            stroke="url(#veinGradient)"
+            strokeWidth="1.5"
+            strokeOpacity="0.4"
+            filter="url(#noise)"
+          />
+        ))}
 
-  {/* Colored veins */}
-  {[...Array(8)].map((_, i) => (
-        <circle
-          key={i}
-          cx="150"
-          cy="150"
-          r={140 - i * 15}
-          fill="none"
+        <path
+          d={`M ${150 + Math.random() * 50} ${150 + Math.random() * 50} Q ${150 + Math.random() * 100} ${150 + Math.random() * 100} ${150 + Math.random() * 50} ${150 + Math.random() * 50}`}
           stroke="url(#veinGradient)"
-          strokeWidth="1.5"
-          strokeOpacity="1"
-          filter="url(#noise)"
-        />
-      ))}
-      {/* Subtle veins */}
-      {[...Array(8)].map((_, i) => (
-        <circle
-          key={i}
-          cx="150"
-          cy="150"
-          r={140 - i * 11}
+          strokeWidth="1"
           fill="none"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="0.5"
-          filter="url(#noise)"
+          filter="url(#marbleTexture)"
         />
-      ))}
 
-      {/* Center label */}
-      <circle cx="150" cy="150" r="45" fill="white" />
-      <image
-        href={coinUrl}
-        x="100"
-        y="100"
-        width="105"
-        height="105"
-        clipPath="circle(50px at 50px 50px)"
-      />
+        {/* <circle cx="150" cy="150" r="45" fill="white" /> */}
+        <image
+          href={coinUrl}
+          x="100"
+          y="100"
+          width="100"
+          height="100"
+          clipPath="circle(50px at 50px 50px)"
+        />
     </svg>
   );
 }
