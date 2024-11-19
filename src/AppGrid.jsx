@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import Samplerr, { ordArray } from './Samplerr.jsx';
+import Samplerr from './Samplerr.jsx';
+import { ordArray } from './ordArray.js';
+
 let coin1 = 'https://ordinals.com/content/0e113d456b01a5d008c7f0da74eef02ea9a7315d74a6ba6299425d47036909bdi0';
 let coin2 = 'https://ordinals.com/content/bf7561a8d27133a3e1144ac49ae1c24ac263f4271d5cf07f151740b3f3c3c54ci0';
 let coin3 = 'https://ordinals.com/content/9d05e297b0e32bd4c955914c03c406eb98635fd805a7c01340f89660aea69ad4i0';
@@ -224,7 +226,8 @@ export default function App() {
     }  
   
   const url = "https://arweave.net/"; // or "localhost"
-   checkCORS(url);
+  const local = "localhost";
+   checkCORS(local);
   
      return () => {
       console.log('Component will unmount');
