@@ -57,13 +57,13 @@ function VinylRecord({ text, onClick }) {
           <feBlend in="SourceGraphic" in2="desaturatedNoise" mode="multiply" result="blend"/>
         </filter>
         
-        <linearGradient id="marbleGradient" gradientTransform="rotate(45)">
+        {/* <linearGradient id="marbleGradient" gradientTransform="rotate(45)">
           <stop offset="0%" stopColor="#ffffff"/>
           <stop offset="25%" stopColor="#f0f0f0"/>
           <stop offset="50%" stopColor="#ffffff"/>
           <stop offset="75%" stopColor="#e0e0e0"/>
           <stop offset="100%" stopColor="#ffffff"/>
-        </linearGradient>
+        </linearGradient> */}
         
         <pattern id="goldVeins" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
           <path d="M0,50 Q25,0 50,50 T100,50" fill="none" stroke="rgba(218,165,32,0.4)" strokeWidth="0.5"/>
@@ -80,13 +80,13 @@ function VinylRecord({ text, onClick }) {
         fill="url(#marbleGradient)"
         filter="url(#noise)"
       />
-      <circle 
+      {/* <circle 
         cx="150" 
         cy="150" 
         r="140" 
         fill="url(#goldVeins)"
         opacity="0.8"
-      />
+      /> */}
 
       {/* Update grooves to be more subtle and golden */}
       {[...Array(9)].map((_, i) => (
@@ -94,7 +94,7 @@ function VinylRecord({ text, onClick }) {
           key={i}
           cx="150"
           cy="150"
-          r={120 - i * 15}
+          r={120 - i * 12}
           fill="none"
           stroke="rgba(218,165,32,0.2)"
           strokeWidth="0.5"
