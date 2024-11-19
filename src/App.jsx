@@ -2,7 +2,8 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { OrbitControls, Environment, Center, GradientTexture } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
-import Samplerr, { ordArray } from './Samplerr.jsx';
+import Samplerr from './Samplerr.jsx';
+import {ordArray, glbModels} from './ordArray.js';
  
 const coinStyle = {
   position: 'absolute',
@@ -171,11 +172,17 @@ function selectRandomOrd() {
   return ordArray[5]; // 2% chance
 }
  
+const randomModel = () => {
+  const random = Math.random() * 100; // Generate number between 0-100
+  if (random < 50) return glbModels[0]; // 50% chance
+  if (random < 75) return glbModels[1]; // 25% chance
+  return glbModels[2]; // 25% chance
+}
 
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader, 'https://ordinals.com/content/f5bc81d7d049c47cb9a956661371ccc4870211cdaf2057a670ab31e810d7a3f9i0');
+  const gltf = useLoader(GLTFLoader,  glbModels[2].url  );
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
