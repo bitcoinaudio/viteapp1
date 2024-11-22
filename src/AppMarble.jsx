@@ -2,15 +2,20 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
 import { marbleImage, ordArrayImage, ordArrayAudio, coinUrl, colors } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
  
-function VinylRecord({ text, onClick }) {
+function VinylRecord({ onClick, isFlipping }) {
   return (
-    
     <svg
       width="100%"
       height="100%"
       viewBox="0 0 300 300"
       onClick={onClick}
-      style={{ cursor: 'pointer' }}
+      style={{
+        cursor: 'pointer',
+        transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        transition: 'transform 0.6s',
+        transformStyle: 'preserve-3d', 
+        backfaceVisibility: 'hidden', 
+      }}
     >
        <defs>
         <linearGradient id="vinylGradient" gradientTransform="rotate(45)">
@@ -81,16 +86,17 @@ function VinylRecord({ text, onClick }) {
 }
 
 const gradientColors = colors.join(', ');
+
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
    const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
-  const [showColorGrid, setShowColorGrid] = useState(false);
-  const [showVinylRecord, setShowVinylRecord] = useState(false);  
+   const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [audioUrl, setAudioUrl] = useState(ordArrayAudio);
   const [imageUrl, setImageUrl] = useState(ordArrayImage);
+
   function checkCORS(url) {
     fetch(url)
         .then(response => {
@@ -107,6 +113,11 @@ export default function App() {
             console.error('CORS check failed:', error);
         });
 }
+
+useEffect(() => {
+  const url = "https://arweave.net/";
+  checkCORS(url);
+}, []);
 
   useEffect(() => {
   
@@ -126,10 +137,7 @@ export default function App() {
     
     console.log('Component mounted');
     
-  
-  const url = "https://arweave.net/";
-   checkCORS(url);
-  
+
      return () => {
       console.log('Component will unmount');
       
@@ -182,14 +190,18 @@ export default function App() {
           {!showSamplerrComponent ? (
             <> 
                 <VinylRecord
-                  text={text}
+                  
                   onClick={() => {
+                    setIsFlipping(true);  
                     setAudioUrl( audioUrl );
                     setImageUrl( imageUrl );
-                    setShowSamplerrComponent(true);
-                    setShowVinylRecord(false);
-                    
+                    setTimeout(() => {
+                      setIsFlipping(false);
+                      setShowSamplerrComponent(true);
+                      setShowVinylRecord(false);
+                    }, 150); 
                   }}
+                  isFlipping={isFlipping}
                  />
               
 

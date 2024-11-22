@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
 import { colors, iomApp ,vinylLabelImage,vinylLabelAudio  } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
 
-function VinylRecord({ text, onClick }) {
+function VinylRecord({ onClick, isFlipping }) {
   return (
     <svg
       width="100%"
       height="100%"
       viewBox="0 0 300 300"
       onClick={onClick}
-      style={{ cursor: 'pointer' }}
+      style={{
+        cursor: 'pointer',
+        transform: isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        transition: 'transform 0.6s',
+        transformStyle: 'preserve-3d', 
+        backfaceVisibility: 'hidden', 
+      }}
     >
        <defs>
         <linearGradient id="vinylGradient" gradientTransform="rotate(45)">
@@ -80,28 +86,25 @@ export default function App() {
         });
 }
   useEffect(() => {
-  
-       
-     if (isFlipping) {
+    const url = "https://arweave.net/";
+    checkCORS(url);
+  }, []);
+
+  useEffect(() => {
+    if (isFlipping) {
       const timer = setTimeout(() => {
         setIsFlipping(false);
         setShowSamplerrComponent(true);
-      }, 150);  
+      }, 150);
       return () => clearTimeout(timer);
     }
-    
+
     console.log('Component mounted');
-    
-   
-  
-  const url = "https://arweave.net/";
-    checkCORS(url);
-  
-     return () => {
+
+    return () => {
       console.log('Component will unmount');
-      
     };
-  }, [isFlipping]); 
+  }, [isFlipping]);
 
   if (corsSuccess === null) {
     return <div>Loading...</div>; 
@@ -151,12 +154,16 @@ export default function App() {
                 <VinylRecord
                   text={text}
                     onClick={() => {
-                      setAudioUrl(audioUrl);
+                    setIsFlipping(true);    
+                    setAudioUrl(audioUrl);
                     setImageUrl(imageUrl);
-                    setShowSamplerrComponent(true);
-                    setShowVinylRecord(false);
-                    
+                    setTimeout(() => {
+                      setIsFlipping(false);
+                      setShowSamplerrComponent(true);
+                      setShowVinylRecord(false);
+                    }, 150);    
                   }}
+                  isFlipping={isFlipping}
                  />
               
 
