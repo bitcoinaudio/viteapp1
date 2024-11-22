@@ -182,7 +182,9 @@ const randomModel = () => {
 
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const gltf = useLoader(GLTFLoader,  glbModels[2].url  );
+
+  const gltf = useLoader(GLTFLoader, 'https://ordinals.com/content/f5bc81d7d049c47cb9a956661371ccc4870211cdaf2057a670ab31e810d7a3f9i0');
+
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
