@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { OrbitControls, Environment, Center, GradientTexture } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
-import Samplerr, { ordArray } from './Samplerr.jsx';
-let coin1 = 'https://ordinals.com/content/0e113d456b01a5d008c7f0da74eef02ea9a7315d74a6ba6299425d47036909bdi0';
-let coin2 = 'https://ordinals.com/content/bf7561a8d27133a3e1144ac49ae1c24ac263f4271d5cf07f151740b3f3c3c54ci0';
-let coin3 = 'https://ordinals.com/content/9d05e297b0e32bd4c955914c03c406eb98635fd805a7c01340f89660aea69ad4i0';
-let coin4 = 'https://ordinals.com/content/503b48a1b7c209c88467fb76773ee3d6215a2a32d3771a9479d76034d315c9eei0';
-let coin5 = 'https://ordinals.com/content/5fab883761387f948b62fcd7e2c58fae14fc22338783d641d489154fa3de4d9fi0';
-let coin6 = 'https://ordinals.com/content/9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0';
-
+import Samplerr from './Samplerr.jsx';
+import {ordArray, glbModels} from './ordArray.js';
+ 
 const coinStyle = {
   position: 'absolute',
   bottom: '20px',
@@ -23,8 +18,8 @@ const coinStyle = {
 
 var url = window.location.pathname;
 var urlarray = url.split("/");
-var ins_id = urlarray[urlarray.length - 1];
-// var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
+// ins_id = urlarray[urlarray.length - 1];
+var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
 let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
 
 const chunkSize = Math.floor(id.length / 8);
@@ -165,14 +160,37 @@ const ColorGrid = ({ isLarge, onClick }) => {
   );
 };
 
+function selectRandomOrd() {
+  const random = Math.random() * 100; // Generate number between 0-100
+
+  // Define rarity distribution
+  if (random < 30) return ordArray[0]; // 30% chance
+  if (random < 55) return ordArray[1]; // 25% chance
+  if (random < 75) return ordArray[2]; // 20% chance
+  if (random < 90) return ordArray[3]; // 15% chance
+  if (random < 98) return ordArray[4]; // 8% chance
+  return ordArray[5]; // 2% chance
+}
+ 
+const randomModel = () => {
+  const random = Math.random() * 100; // Generate number between 0-100
+  if (random < 50) return glbModels[0]; // 50% chance
+  if (random < 75) return glbModels[1]; // 25% chance
+  return glbModels[2]; // 25% chance
+}
+
+
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
+
   const gltf = useLoader(GLTFLoader, 'https://ordinals.com/content/f5bc81d7d049c47cb9a956661371ccc4870211cdaf2057a670ab31e810d7a3f9i0');
+
   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
   const [showColorGrid, setShowColorGrid] = useState(false);
+  const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [loadCount, setLoadCount] = useState(
     parseInt(localStorage.getItem('loadCount') || '0') + 1
   );
@@ -182,31 +200,20 @@ export default function App() {
   const [audioUrl, setAudioUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [buttonImage, setButtonImage] = useState(() => {
-    const random = Math.random() * 100; // Generate number between 0-100
-    
-    // Rarity distribution:
-    // coin1: 30% (most common)
-    // coin2: 25%
-    // coin3: 20%
-    // coin4: 15%
-    // coin5: 8%
-    // coin6: 2% (rarest)
-    if (random < 40) return 'colorGrid';
-    if (random < 75) return coin1;
-    if (random < 80) return coin2;
-    if (random < 85) return coin3;
-    if (random < 92) return coin4;
-    if (random < 98) return coin5;
-    return coin6;
+    const selectedOrd = selectRandomOrd();
+    return selectedOrd.coin;
   });
 
   useEffect(() => {
     localStorage.setItem('loadCount', loadCount.toString());
  
         // setShowSamplerrThumbnail(true);
-      const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
-      setAudioUrl(randomOrd.audio);
-      setImageUrl(randomOrd.image);
+        if(!showVinylRecord) {
+          const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];
+          setAudioUrl(randomOrd.audio);
+          setImageUrl(randomOrd.image);
+        }
+ 
 
      if (isFlipping) {
       const timer = setTimeout(() => {
@@ -269,23 +276,7 @@ export default function App() {
         position: 'relative',
       }}>
         {!showSamplerrComponent ? (
-          <>
-            {buttonImage === 'colorGrid' ? (
-              // ColorGrid + VinylRecord pair
-              <>
-                <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
-                  <VinylRecord 
-                    text={text}
-                    onClick={() => setShowColorGrid(!showColorGrid)}
-                  />
-                </div>
-                <ColorGrid 
-                  isLarge={showColorGrid} 
-                  onClick={() => setShowColorGrid(!showColorGrid)}
-                />
-              </>
-            ) : (
-              // GLTF + Coin pair
+                      
               <>
                 <Canvas camera={{ position: [0, -80, 0] }} shadows>
                   <GradientEnvironment /> 
@@ -296,7 +287,7 @@ export default function App() {
                   <primitive
                     object={gltf.scene}
                     position={[0, 0, 0]}
-                    rotation={[0, 0, 0]}
+                    rotation={[0, 0 , -3.14]}
                     scale={3}
                     children-0-castShadow
                   />
@@ -319,31 +310,17 @@ export default function App() {
                   }}
                 />
               </>
-            )}
+            ) : (
   
-            {showSamplerrThumbnail && (
-              <img
-                src={imageUrl}
-                alt="Samplerr Thumbnail"
-                style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  right: '20px',
-                  height: '300px',
-                  cursor: 'pointer',
-                  zIndex: 1,
-                }}
-                onClick={() => setShowSamplerrComponent(true)}
-              />
-            )}
-          </>
-        ) : (
+           
           <Samplerr
             audioUrl={audioUrl}
-            imageUrl={imageUrl}
+            imageUrl={imageUrl}            
             onBack={() => {
               setShowSamplerrComponent(false);
             }}
+            
+            buttonImage={buttonImage}
           />
         )}
       </div>
@@ -351,8 +328,8 @@ export default function App() {
   } else {
     return (
     <iframe 
-        src="https://arweave.net/orpWhkJBqC1YXAhGSepRdY3Il6zlQ-4sOmxe-fVnRvk"
-        style={{
+        src="https://arweave.net/ml05xf2_JpNGZNygviKlq1BCkvEkGMYhbA-AQEbSwoI"
+         style={{
           position: 'fixed',
           top: 0,
           left: 0,
