@@ -1,29 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-import { ordArray, vinylLables } from './ordArray.js';
+import { ordArray, randomLabelUrl, randomLabelAudio, iomApp, colors, coinUrl } from 'http://127.0.0.1:5500/dist-ord/assets/ordArray.js';
 
-let randomLabel = vinylLables[Math.floor(Math.random() * vinylLables.length)];
-let randomLabelUrl = randomLabel.url; 
  
-var url = window.location.pathname;
-var urlarray = url.split("/");
-//  var ins_id = urlarray[urlarray.length - 1];
-var ins_id = "4e36c60daf4a9dc31c7b4527d31b3191e1ab3cf52ba4fdff866b6e68e335f94di0";
-let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
-
-const chunkSize = Math.floor(id.length / 8);
-const chunks = [];
-for (let i = 0; i < 8; i++) {
-  chunks.push(id.slice(i * chunkSize, (i + 1) * chunkSize));
-}
-
-const colors = chunks.map(chunk => '#' + chunk.slice(0, 6) + "af");
-const randomOrd = ordArray[Math.floor(Math.random() * ordArray.length)];  
-const coinUrl = randomOrd.coin; 
-const ordImage = randomOrd.image;
  
 function VinylRecord({ text, onClick }) {
   return (
+    
     <svg
       width="100%"
       height="100%"
@@ -31,81 +14,93 @@ function VinylRecord({ text, onClick }) {
       onClick={onClick}
       style={{ cursor: 'pointer' }}
     >
+      {/* Vinyl disc with gradient */}
       <defs>
-        <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
-          <feOffset in="blur" dx="4" dy="" result="offsetBlur"/>
-          <feFlood floodColor="rgba(0,0,0,0.3)" result="shadowColor"/>
-          <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadowBlur"/>
-          <feMerge>
-            <feMergeNode in="shadowBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-
-        <filter id="noise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.5"/>
-        </filter>
-        
-        <linearGradient id="veinGradient" gradientTransform="rotate(45)">
+        <linearGradient id="vinylGradient" gradientTransform="rotate(45)">
           {colors.map((color, idx) => (
             <stop
               key={idx}
               offset={`${(idx * 100) / (colors.length - 1)}%`}
               stopColor={color}
-              stopOpacity="0.8"
             />
           ))}
         </linearGradient>
-
-        <filter id="marbleTexture">
-          <feTurbulence type="turbulence" baseFrequency="0.09" numOctaves="9" seed="100" result="turb"/>
-          <feDisplacementMap in="SourceGraphic" in2="turb" scale="5"/>
-        </filter>
       </defs>
 
-      <g filter="url(#dropShadow)">
-        <circle 
-          cx="150" 
-          cy="150" 
-          r="145" 
-          fill="#f5f5f5"
-          // filter="url(#marbleTexture)"
-        />
-      </g>
+      {/* Main vinyl disc */}
+      <circle cx="150" cy="150" r="145" fill="url(#vinylGradient)" />
+      {/* <circle cx="150" cy="150" r="140" fill="black" opacity="0.8" /> */}
 
-        {[...Array(8)].map((_, i) => (
-          <circle
-            key={i}
-            cx="150"
-            cy="150"
-            r={140 - i * 15}
-            fill="none"
-            stroke="url(#veinGradient)"
-            strokeWidth="1.5"
-            strokeOpacity="0.4"
-            filter="url(#noise)"
-          />
-        ))}
+      
+      {/* Add marble texture definitions */}
+      <defs>
+        <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" result="noise"/>
+          <feColorMatrix type="saturate" values="0" result="desaturatedNoise"/>
+          <feBlend in="SourceGraphic" in2="desaturatedNoise" mode="multiply" result="blend"/>
+        </filter>
+        
+        {/* <linearGradient id="marbleGradient" gradientTransform="rotate(45)">
+          <stop offset="0%" stopColor="#ffffff"/>
+          <stop offset="25%" stopColor="#f0f0f0"/>
+          <stop offset="50%" stopColor="#ffffff"/>
+          <stop offset="75%" stopColor="#e0e0e0"/>
+          <stop offset="100%" stopColor="#ffffff"/>
+        </linearGradient> */}
+        
+        <pattern id="goldVeins" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+          <path d="M0,50 Q25,0 50,50 T100,50" fill="none" stroke="rgba(218,165,32,0.4)" strokeWidth="0.5"/>
+          <path d="M0,25 Q25,75 50,25 T100,25" fill="none" stroke="rgba(218,165,32,0.3)" strokeWidth="0.5"/>
+          <path d="M0,75 Q25,25 50,75 T100,75" fill="none" stroke="rgba(218,165,32,0.3)" strokeWidth="0.5"/>
+        </pattern>
+        
+        <pattern id="marblePattern" patternUnits="userSpaceOnUse" width="300" height="300">
+          <image href="bloodMarble.jpg" width="300" height="300" />
+        </pattern>
+      </defs>
 
-        <path
-          d={`M ${150 + Math.random() * 50} ${150 + Math.random() * 50} Q ${150 + Math.random() * 100} ${150 + Math.random() * 100} ${150 + Math.random() * 50} ${150 + Math.random() * 50}`}
-          stroke="url(#veinGradient)"
-          strokeWidth="1"
+      {/* Replace marble circle with new pattern */}
+      <circle 
+        cx="150" 
+        cy="150" 
+        r="140" 
+        fill="url(#marblePattern)"
+      />
+
+      {/* Update grooves to be more subtle and golden */}
+      {[...Array(12)].map((_, i) => (
+        <circle
+          key={i}
+          cx="150"
+          cy="150"
+          r={120 - i * 12}
           fill="none"
-          filter="url(#marbleTexture)"
+          stroke="rgba(218,165,32,0.2)"
+          strokeWidth="0.9"
         />
+      ))}
 
-        {/* <circle cx="150" cy="150" r="45" fill="white" /> */}
-        <image
-          href={coinUrl}
-          x="100"
-          y="100"
-          width="100"
-          height="100"
-          clipPath="circle(50px at 50px 50px)"
-        />
+      {/* Center label */}
+      <circle cx="150" cy="150" r="40" fill="white" />
+      <image
+        href={coinUrl}
+        x="100"
+        y="100"
+        width="100"
+        height="100"
+        clipPath="circle(60px at 45px 45px)"
+      />
+      {/* <text
+        x="150"
+        y="150"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill="black"
+        fontSize="10px"
+        fontFamily="Arial"
+      >
+        {text}
+      </text> */}
     </svg>
   );
 }
@@ -113,14 +108,14 @@ function VinylRecord({ text, onClick }) {
 const gradientColors = colors.join(', ');
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
-  const [text, setText] = useState('The Ides of March');
+   const [text, setText] = useState('The Ides of March');
   const [corsSuccess, setCorsSuccess] = useState(null);
   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
   const [showColorGrid, setShowColorGrid] = useState(false);
   const [showVinylRecord, setShowVinylRecord] = useState(false);  
-  const [audioUrl, setAudioUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [audioUrl, setAudioUrl] = useState(ordArray[0].audio);
+  const [imageUrl, setImageUrl] = useState(ordArray[0].image);
  
 
   useEffect(() => {
@@ -200,16 +195,16 @@ export default function App() {
         }}
       />
         <div
-          // style={{
-          //   background: `linear-gradient(45deg, ${gradientColors})`, // Example gradient
-          //   opacity: 0.5, // Adjust opacity for desired effect
-          //   height: '100vh',
-          //   width: '100vw',
-          //   position: 'fixed',
-          //   top: 0,
-          //   left: 0,
-          //   zIndex: -1, // Positioned above the blurred background
-          // }}
+          style={{
+            background: `linear-gradient(45deg, ${gradientColors})`, 
+            opacity: 0.5, // Adjust opacity for desired effect
+            height: '100vh',
+            width: '100vw',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: -1, // Positioned above the blurred background
+          }}
         />
 
        <div
@@ -227,12 +222,8 @@ export default function App() {
                 <VinylRecord
                   text={text}
                   onClick={() => {
-                    setAudioUrl(
-                      'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'
-                    );
-                    setImageUrl(
-                      coinUrl
-                    );
+                    setAudioUrl( audioUrl );
+                    setImageUrl( imageUrl );
                     setShowSamplerrComponent(true);
                     setShowVinylRecord(false);
                     
@@ -258,8 +249,8 @@ export default function App() {
             </>
           ) : (
             <Samplerr
-              audioUrl={randomOrd.audio}
-              imageUrl={randomOrd.image}
+              audioUrl={audioUrl}
+              imageUrl={imageUrl}
               onBack={() => {
                 setShowSamplerrComponent(false);
               }}

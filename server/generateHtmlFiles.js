@@ -25,7 +25,7 @@ const htmlTemplate = (name, audio, image, coin) => `
 `;
 
 (async () => {
-    const { ordArray } = await import('../src/Samplerr.jsx');
+    const { ordArray } = await import('../dist-ord/assets/ordArray.js');
 
     // Generate an HTML file for each item in ordArray
     ordArray.forEach((item) => {

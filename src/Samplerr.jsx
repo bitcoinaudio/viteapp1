@@ -6,12 +6,22 @@ const numSamples = 12;
 const defaultBPM = 91.5;
 
 const SamplerrContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   padding: 8px;
   margin-bottom: 8px;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
+   border-radius: 0.25rem;
   position: relative;
+
+  @media (max-width: 1024px) and (orientation: landscape) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
 `;
 
 const SampleGrid = styled.div`
@@ -19,7 +29,35 @@ const SampleGrid = styled.div`
   grid-template-columns: repeat(3, 125px);
   grid-gap: 4px;
   justify-content: center;
+  box-shadow: 1px 1px 20px 6px rgb(27, 27, 27);
+
+  @media (max-width: 1024px) and (orientation: landscape) {
+    flex: 0 0 auto;
+    margin-right: 0px;
+    order: 1;
+  }
 `;
+
+const ControlsContainer = styled.div`
+  color: #f8f9fa;
+  background-color: #111111e3;
+  border: #1c2023;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 8px;
+  border-color: rgba(0, 0, 0, 0.53);
+  border-width: 1px;
+  box-shadow: 1px 1px 20px 5px rgb(27, 27, 27);
+
+  @media (max-width: 1024px) and (orientation: landscape) {
+    margin-top: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 10px;
+    order: 2;
+  }
+`;
+
 
 const Pad = styled.div`
   width: 100%;
@@ -83,6 +121,7 @@ const BackButton = styled.img`
   }
 `;
 
+
 const CustomSlider = ({
   label,
   value,
@@ -90,18 +129,10 @@ const CustomSlider = ({
   max,
   step,
   onChange,
-  midiControl,
-  midiAvailable,
-  listenForControl,
   thumbImage,
 }) => (
   <SliderContainer>
     <label>{label}</label>
-    {midiAvailable && midiControl && (
-      <button onClick={() => listenForControl(midiControl)}>
-        Assign MIDI to {midiControl}
-      </button>
-    )}
     <StyledSlider value={value} min={min} max={max} step={step} onChange={onChange} thumbImage={thumbImage} />
   </SliderContainer>
 );
@@ -122,22 +153,13 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   const [volumeValue, setVolumeValue] = useState(0.5);
   const [sampleLengthValue, setSampleLengthValue] = useState(0);
   const [sampleStartValue, setSampleStartValue] = useState(0);
-  const [midiAvailable, setMidiAvailable] = useState(false);
-  const [listeningFor, setListeningFor] = useState(null);
-  const [midiAssignments, setMidiAssignments] = useState({
-    volume: null,
-    bpm: null,
-    sampleStart: null,
-    sampleLength: null,
-  });
-
+ 
   const sampleGridRef = useRef(null);
   const [currentSample, setCurrentSample] = useState({ audioUrl, imageUrl });
-  const midiAccessRef = useRef(null);
-
+ 
   const [samplePads, setSamplePads] = useState([]);
 
-  // Initialize Tone.Player and load image
+  
   useEffect(() => {
     loadSoundAndImage(currentSample.audioUrl, currentSample.imageUrl);
     if (isFlipping) {
@@ -147,21 +169,10 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       return () => clearTimeout(timer);
     }
 
-    // Load MIDI assignments from localStorage
-    const storedMidiAssignments = JSON.parse(localStorage.getItem('midiAssignments'));
-    if (storedMidiAssignments) {
-      setMidiAssignments(storedMidiAssignments);
-    }
-
-    // setupMIDI();
-
+   
     // Cleanup function
     return () => {
-      if (midiAccessRef.current) {
-        for (let input of midiAccessRef.current.inputs.values()) {
-          input.onmidimessage = null;
-        }
-      }
+     
       if (player) {
         player.dispose();
       }
@@ -326,73 +337,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     }
   };
 
-  // MIDI Handling
-  const setupMIDI = () => {
-    if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess()
-        .then((access) => {
-          midiAccessRef.current = access;
-
-          for (let input of access.inputs.values()) {
-            input.onmidimessage = handleMIDIMessage;
-          }
-
-          setMidiAvailable(access.inputs.size > 0);
-        })
-        .catch((err) => {
-          console.error('MIDI Access Failed:', err);
-          setMidiAvailable(false);
-        });
-    } else {
-      console.warn('WebMIDI not supported in this browser');
-      setMidiAvailable(false);
-    }
-  };
-
-  const handleMIDIMessage = (event) => {
-    const [status, data1, data2] = event.data;
-    const command = status & 0xf0;
-    const note = data1;
-    const velocity = data2 / 127;
-
-    // Handle MIDI note inputs
-    if (command === 0x90 && velocity > 0) {
-      const index = note - 36; // Map MIDI note to grid index
-      if (index >= 0 && index < numSamples) {
-        selectSample(index);
-      }
-    }
-
-    // Handle Control Change messages
-    if (command === 0xb0) {
-      if (listeningFor) {
-        // Assign MIDI control to a parameter
-        setMidiAssignments((prev) => {
-          const updated = { ...prev, [listeningFor]: data1 };
-          localStorage.setItem('midiAssignments', JSON.stringify(updated));
-          return updated;
-        });
-        alert(`Assigned control ${data1} to ${listeningFor}`);
-        setListeningFor(null);
-      } else {
-        // Adjust parameters based on MIDI control
-        const control = data1;
-        if (control === midiAssignments.volume) adjustVolume(velocity);
-        if (control === midiAssignments.bpm)
-          handleBpmChange(Math.round(velocity * 180));
-        if (control === midiAssignments.sampleStart)
-          handleSampleStartChange(velocity * sampleDuration);
-        if (control === midiAssignments.sampleLength)
-          handleSampleLengthChange(velocity * sampleDuration);
-      }
-    }
-  };
-
-  const listenForControl = (parameter) => {
-    setListeningFor(parameter);
-    alert(`Listening for MIDI control to assign to ${parameter}...`);
-  };
-
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     seconds = Math.floor(seconds % 60);
@@ -403,13 +347,14 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   };
 
   return (
+    
     <SamplerrContainer>
       <SampleGrid>
         {samplePads.map((pad) => (
           <Pad
             key={pad.id}
             id={pad.id}
-            onClick={() => selectSample(pad.id)}
+            onMouseDown={() => selectSample(pad.id)}
             selected={selectedSampleIndex === pad.id}
           >
             <img
@@ -422,7 +367,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       </SampleGrid>
 
       {trackLoaded ? (
-        <div style={{ marginTop: '20px', position: 'relative' }}>
+        <ControlsContainer>
           <div>
             <label>
               Start Time: {formatTime(selectedSampleIndex * baseSampleDuration)}
@@ -434,13 +379,10 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
           <CustomSlider
             label={`BPM: ${bpmSliderValue} BPM`}
             value={bpmSliderValue}
-            min={60}
-            max={180}
+            min={45}
+            max={220}
             step={1}
             onChange={(e) => handleBpmChange(Number(e.target.value))}
-            midiControl="bpm"
-            midiAvailable={midiAvailable}
-            listenForControl={listenForControl}
             thumbImage={buttonImage}
           />
 
@@ -451,9 +393,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
             max={sampleDuration}
             step={0.1}
             onChange={(e) => handleSampleLengthChange(Number(e.target.value))}
-            midiControl="sampleLength"
-            midiAvailable={midiAvailable}
-            listenForControl={listenForControl}
             thumbImage={buttonImage}
           />
 
@@ -464,9 +403,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
             max={sampleDuration}
             step={0.1}
             onChange={(e) => handleSampleStartChange(Number(e.target.value))}
-            midiControl="sampleStart"
-            midiAvailable={midiAvailable}
-            listenForControl={listenForControl}
             thumbImage={buttonImage}
           />
 
@@ -477,9 +413,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
             max={1}
             step={0.1}
             onChange={(e) => adjustVolume(Number(e.target.value))}
-            midiControl="volume"
-            midiAvailable={midiAvailable}
-            listenForControl={listenForControl}
             thumbImage={buttonImage}
           />
           <div className="flex items-center gap-8">
@@ -496,7 +429,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
           <button onClick={stopSample} title="Stop">🛑</button>
           <button onClick={onBack} title="Back">🔙</button>
           </div>
-        </div>
+        </ControlsContainer>
       ) : (
         <p>Loading...</p>
       )}
