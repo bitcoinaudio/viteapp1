@@ -71,21 +71,21 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState(vinylLabelImage);
   
   function checkCORS(url) {
-    fetch(url)
-        .then(response => {
-            if (response.ok) {
-                setCorsSuccess(true);
-                console.log("CORS success");
-            } else {
-                setCorsSuccess(false);
-                console.log("CORS failure");
-            }
-        })
-        .catch(error => {
-            setCorsSuccess(false);
-            console.error('CORS check failed:', error);
-        });
-}
+    fetch(url, { method: 'HEAD' })
+      .then(response => {
+        if (response.ok) {
+          setCorsSuccess(true);
+          console.log("CORS success");
+        } else {
+          setCorsSuccess(false);
+          console.log("CORS failure");
+        }
+      })
+      .catch(error => {
+        setCorsSuccess(false);
+        console.error('CORS check failed:', error);
+      });
+  }
   useEffect(() => {
     checkCORS(url);
   }, []);
