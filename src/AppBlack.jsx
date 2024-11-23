@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
 import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
-// import { colors, vinylLabelImage, vinylLabelAudio } from 'http://localhost/content/5a99f0af4661e9856cb7641c81f9809b46d64d38082dc006296144d216830daci0';
 
 
 function VinylRecord({ onClick, isFlipping }) {
@@ -71,51 +70,20 @@ export default function App() {
   const [audioUrl, setAudioUrl] = useState(vinylLabelAudio);
   const [imageUrl, setImageUrl] = useState(vinylLabelImage);
 
- 
-
-useEffect(() => {
-  function checkCORS(url) {
-    if (url === "localhost") {
-      setCorsSuccess(true);
-      console.log("CORS success");
-    } else if (url === "https://arweave.net/") {
-      setCorsSuccess(false);
-      console.log("CORS failure");
-    } else {
-      // For any other URL, perform the actual CORS check
-      fetch(url)
-        .then(response => {
-          if (response.ok) {
-            setCorsSuccess(true);
-            console.log("CORS success");
-          } else {
-            setCorsSuccess(false);
-            console.log("CORS failure");
-          }
-        })
-        .catch(error => {
-          setCorsSuccess(false);
-          console.log("CORS failure (error)", error);
-        });
+  useEffect(() => {
+    function handleCorsCheckComplete(event) {
+      setCorsSuccess(event.detail);
+      console.log("CORS check complete form useeffect", event.detail);
     }
-  }  
 
+    window.addEventListener('corsCheckComplete', handleCorsCheckComplete);
 
-function displayOrdinal() {
-  setCorsSuccess(true);
-     
-}
-
-function displayApp() {
-  setCorsSuccess(false);
-}
-
-
-  const resourceUrl = (window.location.pathname);
-  checkCORS(resourceUrl, displayOrdinal, displayApp);
-
+    return () => {
+      window.removeEventListener('corsCheckComplete', handleCorsCheckComplete);
+    };
   }, []);
 
+ 
   
   useEffect(() => {
     if (isFlipping) {
