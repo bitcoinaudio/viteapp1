@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
 import { colors, iomApp ,vinylLabelImage,vinylLabelAudio  } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
+const url = "https://arweave.net/";
 
 function VinylRecord({ onClick, isFlipping }) {
   return (
@@ -86,7 +87,6 @@ export default function App() {
         });
 }
   useEffect(() => {
-    const url = "https://arweave.net/";
     checkCORS(url);
   }, []);
 
