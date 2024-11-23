@@ -63,32 +63,12 @@ const gradientColors = colors.join(', ');
 export default function App() {
   const [isFlipping, setIsFlipping] = useState(false);
    const [text, setText] = useState('The Ides of March');
-  const [corsSuccess, setCorsSuccess] = useState(null);
-  const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
+   const [showSamplerrThumbnail, setShowSamplerrThumbnail] = useState(false);
   const [showSamplerrComponent, setShowSamplerrComponent] = useState(false);
    const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [audioUrl, setAudioUrl] = useState(vinylLabelAudio);
   const [imageUrl, setImageUrl] = useState(vinylLabelImage);
   
-  function checkCORS(url) {
-    fetch(url, { method: 'HEAD' })
-      .then(response => {
-        if (response.ok) {
-          setCorsSuccess(true);
-          console.log("CORS success");
-        } else {
-          setCorsSuccess(false);
-          console.log("CORS failure");
-        }
-      })
-      .catch(error => {
-        setCorsSuccess(false);
-        console.error('CORS check failed:', error);
-      });
-  }
-  useEffect(() => {
-    checkCORS(url);
-  }, []);
 
   useEffect(() => {
     if (isFlipping) {
@@ -106,11 +86,11 @@ export default function App() {
     };
   }, [isFlipping]);
 
-  if (corsSuccess === null) {
+  if (window.corsSuccess === null) {
     return <div>Loading...</div>; 
   }
 
-  if (corsSuccess === true) {
+  if (window.corsSuccess === true) {
     return (
       <div>
        <div
