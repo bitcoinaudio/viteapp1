@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-import { colors, vinylLabelImage, vinylLabelAudio } from 'http://localhost/content/feb61975f83ce2131c081be577d1a3c49e6fa0032138398453c103573aefb14ei0';
+import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
+// import { colors, vinylLabelImage, vinylLabelAudio } from 'http://localhost/content/5a99f0af4661e9856cb7641c81f9809b46d64d38082dc006296144d216830daci0';
+
 
 function VinylRecord({ onClick, isFlipping }) {
   return (
@@ -69,28 +71,52 @@ export default function App() {
   const [audioUrl, setAudioUrl] = useState(vinylLabelAudio);
   const [imageUrl, setImageUrl] = useState(vinylLabelImage);
 
-  function checkCORS(url) {
-    fetch(url)
-        .then(response => {
-            console.log(response);
-            if (response.ok) {
-                setCorsSuccess(true);
-                console.log("CORS success");
-            } else {
-                setCorsSuccess(false);
-                console.log("CORS failure");
-            }
-        })
-        .catch(error => {
-            setCorsSuccess(false);
-            console.error('CORS check failed:', error);
-        });
-}
+ 
 
 useEffect(() => {
-  // setCorsSuccess(true);
-  checkCORS("http://localhost");
-}, []);
+  function checkCORS(url) {
+    if (url === "localhost") {
+      setCorsSuccess(true);
+      console.log("CORS success");
+    } else if (url === "https://arweave.net/") {
+      setCorsSuccess(false);
+      console.log("CORS failure");
+    } else {
+      // For any other URL, perform the actual CORS check
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            setCorsSuccess(true);
+            console.log("CORS success");
+          } else {
+            setCorsSuccess(false);
+            console.log("CORS failure");
+          }
+        })
+        .catch(error => {
+          setCorsSuccess(false);
+          console.log("CORS failure (error)", error);
+        });
+    }
+  }  
+
+
+function displayOrdinal() {
+  setCorsSuccess(true);
+     
+}
+
+function displayApp() {
+  setCorsSuccess(false);
+}
+
+
+  const resourceUrl = (window.location.pathname);
+  checkCORS(resourceUrl, displayOrdinal, displayApp);
+
+  }, []);
+
+  
   useEffect(() => {
     if (isFlipping) {
       const timer = setTimeout(() => {

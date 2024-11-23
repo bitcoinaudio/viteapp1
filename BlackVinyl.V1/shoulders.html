@@ -3,25 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/content/609bad601cdafa4d4a2622bbd9f4ebfdd278b8c5ea1efeb0d468db33f871fffai0"></script>
-    <script src="/content/609b117277f1e9c9f27f358fe02db34e13d08915bbcea18770dc36f5f3afcbb2i2"></script>
-    <script src="/content/3bcfdc4e97209ecaaab06705b52ba6b7fc9d1cee77404ac15e655ce691a44654i0"></script> 
+     <script src="https://ordinals.com/content/609b117277f1e9c9f27f358fe02db34e13d08915bbcea18770dc36f5f3afcbb2i2"></script>
+    <script src="https://ordinals.com/content/3bcfdc4e97209ecaaab06705b52ba6b7fc9d1cee77404ac15e655ce691a44654i0"></script> 
      <title>The Ides of March</title>
-     <script type="module" crossorigin src="/content/ddf23dc62f50b5fdb3628fda21ee6dfad2d6c66e4fa2391fe4fba456f70cbc7ai0"></script>
-     <link rel="stylesheet" crossorigin href="/content/7fd100bd61dc765708863a301ae0f7d60d7cc81dfc45b01600bdd5edfe1b0b18i0">
+     <script>
+      function checkCORS() {
+          const url = window.location.pathname;
+          let corsSuccess = null;
+
+          if (url === "localhost") {
+              corsSuccess = true;
+              console.log("CORS success");
+          } else if (url === "https://arweave.net/") {
+              corsSuccess = false;
+              console.log("CORS failure");
+          } else {
+              fetch(url)
+                  .then(response => {
+                      corsSuccess = response.ok;
+                      console.log(corsSuccess ? "CORS success" : "CORS failure");
+                      window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+                  })
+                  .catch(error => {
+                      corsSuccess = false;
+                      console.log("CORS failure (error)", error);
+                      window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+                  });
+          }
+
+          // For synchronous cases
+          if (corsSuccess !== null) {
+              window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+          }
+      }
+
+      document.addEventListener('DOMContentLoaded', checkCORS);
+  </script>
+     <script type="module" crossorigin src="https://ordinals.com/content/a52fc6bdd247fc687c383f12a3aa0f1969c0137c6b9e193a3a65dc16595b207ci0"></script>
+     <!-- <script type="module" crossorigin src="http://localhost/content/32f06e4083c30c3a175482296047d129ea2366ea8a99678e9356537f717b3c13i0"></script> -->
+     <link rel="stylesheet" crossorigin href="https://ordinals.com/content/7fd100bd61dc765708863a301ae0f7d60d7cc81dfc45b01600bdd5edfe1b0b18i0">
    </head>
   <body>
     <div id="root"></div>
     <script type="module">
-      import { setVinylLabelImage, setVinylLabelAudio, setIomApp } from '/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
+      import { setVinylLabelImage, setVinylLabelAudio, setIomApp } from 'https://ordinals.com/content/27a67230b768385114f7cab6a728445a5a53ad988e5d0118303febf8fffdf4d5i0';
       
       // Set new values
-      setVinylLabelImage('/content/28cf5f2b35daf24d73cddcaca085bbdba29fb04ec1a3019597170c971abc9364i0');
-      setVinylLabelAudio('/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0');
+      setVinylLabelImage('https://ordinals.com/content/28cf5f2b35daf24d73cddcaca085bbdba29fb04ec1a3019597170c971abc9364i0');
+      setVinylLabelAudio('https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0');
 
   </script>
 
 
-    <script src="/content/44740a1f30efb247ef41de3355133e12d6f58ab4dc8a3146648e2249fa9c6a39i0"></script>
+    <script src="https://ordinals.com/content/44740a1f30efb247ef41de3355133e12d6f58ab4dc8a3146648e2249fa9c6a39i0"></script>
   </body>
 </html>

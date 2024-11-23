@@ -7,6 +7,30 @@
     <script src="https://ordinals.com/content/3bcfdc4e97209ecaaab06705b52ba6b7fc9d1cee77404ac15e655ce691a44654i0"></script>
    
      <title>The Ides of March</title>
+      <script>
+        function checkCORS() {
+            const url = "window.location.pathname";
+            let corsSuccess = null;
+
+            if (url === "localhost") {
+                corsSuccess = true;
+                console.log("CORS success");
+            } else if (url === "https://arweave.net/") {
+                corsSuccess = false;
+                console.log("CORS failure");
+            } else {
+                // corsSuccess = false;
+                console.log("CORS failure");
+            }
+
+            // For synchronous cases
+            if (corsSuccess !== null) {
+                window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkCORS);
+    </script>
    </head>
   <body>
     <div id="root"></div>
