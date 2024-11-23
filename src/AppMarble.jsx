@@ -96,28 +96,20 @@ export default function App() {
    const [showVinylRecord, setShowVinylRecord] = useState(false);  
   const [audioUrl, setAudioUrl] = useState(ordArrayAudio);
   const [imageUrl, setImageUrl] = useState(ordArrayImage);
+  useEffect(() => {
+    function handleCorsCheckComplete(event) {
+      setCorsSuccess(event.detail);
+    }
 
-  function checkCORS(url) {
-    fetch(url)
-        .then(response => {
-            if (response.ok) {
-                setCorsSuccess(true);
-                console.log("CORS success");
-            } else {
-                setCorsSuccess(false);
-                console.log("CORS failure");
-            }
-        })
-        .catch(error => {
-            setCorsSuccess(false);
-            console.error('CORS check failed:', error);
-        });
-}
+    window.addEventListener('corsCheckComplete', handleCorsCheckComplete);
 
-useEffect(() => {
-  const url = "https://arweave.net/";
-  checkCORS(url);
-}, []);
+    return () => {
+      window.removeEventListener('corsCheckComplete', handleCorsCheckComplete);
+    };
+  }, []);
+
+ 
+
 
   useEffect(() => {
   
