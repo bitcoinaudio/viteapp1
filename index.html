@@ -8,40 +8,32 @@
    
      <title>The Ides of March</title>
      <script>
-      function checkCORS() {
-          const url = window.location.pathname;
+        function checkCORS() {
+          const id = window.location.pathname.split("/")[2];
           let corsSuccess = null;
-
-          if (url === "localhost") {
-              corsSuccess = true;
-              console.log("CORS success");
-          } else if (url === "https://arweave.net/") {
-              corsSuccess = false;
-              console.log("CORS failure");
-          } else {
-              fetch(url)
-                  .then(response => {
-                      corsSuccess = response.ok;
-                      console.log(corsSuccess ? "CORS success" : "CORS failure");
-                      window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
-                  })
-                  .catch(error => {
-                      corsSuccess = false;
-                      console.log("CORS failure (error)", error);
-                      window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
-                  });
+    
+          {
+            fetch('localhost') // http://ordinals.com/content/${id}
+              .then(response => {
+                corsSuccess = response.ok;
+                console.log(corsSuccess ? "CORS success" : "CORS failure");
+                window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+              })
+              .catch(error => {
+                corsSuccess = false;
+                console.log("CORS failure (error)", error);
+                window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+              });
           }
-
-          // For synchronous cases
+    
           if (corsSuccess !== null) {
-              window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
+            window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
           }
-      }
-
-      document.addEventListener('DOMContentLoaded', checkCORS);
-  </script>
- 
-   </head>
+        }
+    
+        document.addEventListener('DOMContentLoaded', checkCORS);
+      </script>
+     </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

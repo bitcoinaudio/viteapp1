@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-import { marbleImage, ordArrayImage, ordArrayAudio, coinUrl, colors } from 'https://ordinals.com/content/698e34cde2d7a61576f06b2716b62fe8b9b963e2e0a8beb0f5b46a24301c7aebi0';
+import { marbleImage, ordArrayImage, ordArrayAudio, coinUrl, colors } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
  
 function VinylRecord({ onClick, isFlipping }) {
   return (
@@ -107,8 +107,6 @@ export default function App() {
       window.removeEventListener('corsCheckComplete', handleCorsCheckComplete);
     };
   }, []);
-
- 
 
 
   useEffect(() => {
