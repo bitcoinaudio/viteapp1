@@ -1,6 +1,6 @@
 // Samplerr.jsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
+ import styled from 'styled-components';
 
 const numSamples = 12;
 const defaultBPM = 91.5;
@@ -104,24 +104,7 @@ const StyledSlider = styled.input.attrs({ type: 'range' })`
   }
 `;
 
-const BackButton = styled.img`
-  padding: 10px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
-  z-index: 1;
-  width: 5vw;
-  height: auto;
-  transform: ${(props) => (props.isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)')};
-  transition: transform 0.6s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-
+ 
 const CustomSlider = ({
   label,
   value,
@@ -153,12 +136,13 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   const [volumeValue, setVolumeValue] = useState(0.5);
   const [sampleLengthValue, setSampleLengthValue] = useState(0);
   const [sampleStartValue, setSampleStartValue] = useState(0);
-
+ 
   const sampleGridRef = useRef(null);
   const [currentSample, setCurrentSample] = useState({ audioUrl, imageUrl });
-
+ 
   const [samplePads, setSamplePads] = useState([]);
 
+  
   useEffect(() => {
     loadSoundAndImage(currentSample.audioUrl, currentSample.imageUrl);
     if (isFlipping) {
@@ -167,8 +151,9 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       }, 150); // Match this duration with CSS transition
       return () => clearTimeout(timer);
     }
-
-    return () => {
+  
+     return () => {
+     
       if (player) {
         player.dispose();
       }
@@ -176,7 +161,8 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFlipping, currentSample]);
 
-  const loadSoundAndImage = useCallback((audioUrl, imageUrl) => {
+
+  const loadSoundAndImage = (audioUrl, imageUrl) => {
     const newPlayer = new Tone.Player({
       url: audioUrl,
       loop: isLooping,
@@ -193,21 +179,18 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
     });
 
     loadAndDrawImage(imageUrl);
-  }, [isLooping]);
+  };
 
-  const loadAndDrawImage = useCallback((imageUrl) => {
+  const loadAndDrawImage = (imageUrl) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous'; // Important for cross-origin images
     img.src = imageUrl;
     img.onload = () => {
       fillGridWithImage(img);
     };
-    img.onerror = () => {
-      console.error('Failed to load image');
-    };
-  }, []);
+  };
 
-  const fillGridWithImage = useCallback((img) => {
+  const fillGridWithImage = (img) => {
     const numCols = 3;
     const numRows = 4;
     const canvasWidth = 100;
@@ -259,10 +242,17 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
 
     // Set the sample pads in state
     setSamplePads(pads);
-  }, []);
+  };
 
+  const selectSample = (index) => {
+    setSelectedSampleIndex(index);
+    setSampleLengthValue(loopLengths[index]);
+    setSampleStartValue(loopStarts[index]);
+    setBpmSliderValue(loopBPM[index]);
+    playSample(index, loopLengths[index]);
+  };
 
-  const playSample = useCallback((index, sampleLength) => {
+  const playSample = (index, sampleLength) => {
     if (player) {
       const startTime = index * baseSampleDuration + sampleStartValue;
       player.stop();
@@ -274,15 +264,14 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       player.playbackRate = bpmSliderValue / defaultBPM;
       player.start(undefined, startTime, isLooping ? undefined : sampleLength);
     }
-  }, [baseSampleDuration, bpmSliderValue, isLooping, player, sampleStartValue]);
-
-  const stopSample = useCallback(() => {
+  };
+  const stopSample = () => {
     if (player) {
       player.stop();
     }
-  }, [player]);
+  };
 
-  const toggleLoop = useCallback(() => {
+  const toggleLoop = () => {
     setIsLooping((prev) => !prev);
     if (player) {
       player.loop = !isLooping;
@@ -290,9 +279,9 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
         playSample(selectedSampleIndex, sampleLengthValue);
       }
     }
-  }, [isLooping, playSample, player, sampleLengthValue, selectedSampleIndex]);
+  };
 
-  const handleBpmChange = useCallback((value) => {
+  const handleBpmChange = (value) => {
     setBpmSliderValue(value);
     if (selectedSampleIndex !== -1) {
       const newLoopBPM = [...loopBPM];
@@ -300,9 +289,9 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       setLoopBPM(newLoopBPM);
       playSample(selectedSampleIndex, sampleLengthValue);
     }
-  }, [loopBPM, playSample, sampleLengthValue, selectedSampleIndex]);
+  };
 
-  const handleSampleLengthChange = useCallback((value) => {
+  const handleSampleLengthChange = (value) => {
     setSampleLengthValue(value);
     if (selectedSampleIndex !== -1) {
       const newLoopLengths = [...loopLengths];
@@ -310,9 +299,9 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       setLoopLengths(newLoopLengths);
       playSample(selectedSampleIndex, value);
     }
-  }, [loopLengths, playSample, selectedSampleIndex]);
+  };
 
-  const handleSampleStartChange = useCallback((value) => {
+  const handleSampleStartChange = (value) => {
     setSampleStartValue(value);
     if (selectedSampleIndex !== -1) {
       const newLoopStarts = [...loopStarts];
@@ -320,35 +309,26 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       setLoopStarts(newLoopStarts);
       playSample(selectedSampleIndex, sampleLengthValue);
     }
-  }, [loopStarts, playSample, sampleLengthValue, selectedSampleIndex]);
+  };
 
-  const adjustVolume = useCallback((value) => {
+  const adjustVolume = (value) => {
     setVolumeValue(value);
     if (player) {
       player.volume.value = Tone.gainToDb(value);
     }
-  }, [player]);
+  };
 
-  const formatTime = useCallback((seconds) => {
+  const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     seconds = Math.floor(seconds % 60);
     if (seconds < 10) {
       seconds = '0' + seconds;
     }
     return `${minutes}:${seconds}`;
-  }, []);
-
-    const selectSample = useCallback((index) => {
-    setSelectedSampleIndex(index);
-    setSampleLengthValue(loopLengths[index]);
-    setSampleStartValue(loopStarts[index]);
-    setBpmSliderValue(loopBPM[index]);
-    playSample(index, loopLengths[index]);
-  }, [loopBPM, loopLengths, loopStarts, playSample]);
-
-
+  };
 
   return (
+    
     <SamplerrContainer>
       <SampleGrid>
         {samplePads.map((pad) => (
@@ -417,25 +397,27 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
             thumbImage={buttonImage}
           />
           <div className="flex items-center gap-8">
-            <label className="flex items-center">
-              Looping: {isLooping ? 'On' : 'Off'}
-              <input
-                type="checkbox"
-                className="toggle toggle-primary ml-2"
-                checked={isLooping}
-                onChange={toggleLoop}
-              />
-            </label>
+          <label className="flex items-center">
+            Looping: {isLooping ? 'On' : 'Off'}
+            <input
+              type="checkbox"
+              className="toggle toggle-primary ml-2"
+              checked={isLooping}
+              onChange={toggleLoop}
+            />
+          </label>
 
-            <button onClick={stopSample} title="Stop">🛑</button>
-            <button onClick={onBack} title="Back">🔙</button>
+          <button onClick={stopSample} title="Stop">🛑</button>
+          <button onClick={onBack} title="Back">🔙</button>
           </div>
         </ControlsContainer>
       ) : (
         <p>Loading...</p>
       )}
     </SamplerrContainer>
+
   );
+  
 };
 
 export default Samplerr;

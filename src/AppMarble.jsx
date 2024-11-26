@@ -134,11 +134,8 @@ export default function App() {
     };
   }, [isFlipping]); 
 
-  if (corsSuccess === null) {
-    return <div>Loading...</div>; 
-  }
 
-  if (corsSuccess === true) {
+  if (corsSuccess === true || corsSuccess === null) {
     return (
       <div>
        <div
@@ -225,7 +222,7 @@ export default function App() {
       </div>
     </div>
     );
-  } else {
+  } else if (corsSuccess === false) {
     return (
     <iframe 
         src="https://arweave.net/0AphIk6Qiuu3RwGtYL02w9weo3Cci5Xp-M0LRgZ42Gg"

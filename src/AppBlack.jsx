@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
- 
+import { colors, vinylLabelImage, vinylLabelAudio } from 'http://localhost/content/8d6024a049ef20894dc2f1ddd739a66707c97dcc78b96be8f455b1b928d9cb91i0';
+  
 
 function VinylRecord({ onClick, isFlipping }) {
   return (
@@ -69,11 +69,12 @@ export default function App() {
   const [showVinylRecord, setShowVinylRecord] = useState(false);
   const [audioUrl, setAudioUrl] = useState(vinylLabelAudio);
   const [imageUrl, setImageUrl] = useState(vinylLabelImage);
+  
 
   useEffect(() => {
     function handleCorsCheckComplete(event) {
       setCorsSuccess(event.detail);
-      console.log("CORS check complete form useeffect", event.detail);
+      console.log("CORS check complete from useeffect", event.detail);
     }
 
     window.addEventListener('corsCheckComplete', handleCorsCheckComplete);
@@ -101,11 +102,11 @@ export default function App() {
     };
   }, [isFlipping]);
 
-  if (corsSuccess === null) {
-    return <div>Loading...</div>;
-  }
+  // if (corsSuccess === null) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (corsSuccess === true) {
+  if (corsSuccess === true || corsSuccess === null) {
     return (
       <div>
         <div
@@ -192,7 +193,7 @@ export default function App() {
         </div>
       </div>
     );
-  } else {
+  } else if (corsSuccess === false) {
     return (
       <iframe
         src="https://arweave.net/0AphIk6Qiuu3RwGtYL02w9weo3Cci5Xp-M0LRgZ42Gg"
