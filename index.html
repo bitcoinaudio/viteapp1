@@ -7,32 +7,7 @@
     <script src="https://ordinals.com/content/3bcfdc4e97209ecaaab06705b52ba6b7fc9d1cee77404ac15e655ce691a44654i0"></script>
    
      <title>The Ides of March</title>
-     <script>
-        function checkCORS() {
-          const id = window.location.pathname.split("/")[2];
-          let corsSuccess = null;
-    
-          {
-            fetch('localhost') // http://ordinals.com/content/${id}
-              .then(response => {
-                corsSuccess = response.ok;
-                console.log(corsSuccess ? "CORS success" : "CORS failure");
-                window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
-              })
-              .catch(error => {
-                corsSuccess = false;
-                console.log("CORS failure (error)", error);
-                window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
-              });
-          }
-    
-          if (corsSuccess !== null) {
-            window.dispatchEvent(new CustomEvent('corsCheckComplete', { detail: corsSuccess }));
-          }
-        }
-    
-        document.addEventListener('DOMContentLoaded', checkCORS);
-      </script>
+     
      </head>
   <body>
     <div id="root"></div>
