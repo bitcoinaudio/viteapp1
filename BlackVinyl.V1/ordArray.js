@@ -118,8 +118,8 @@ let bloodmarbleimage = 'https://ordinals.com/content/1a722dcfabb452f9fb3eadf5fa3
 let marbleImage = goldMarble ;
 
 
-let vinylLabelImage = 'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0' ; 
-let vinylLabelAudio = 'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0'  ;
+let vinylLabelImage = 'https://ordinals.com/content/b86c4701d220a90d3cd510b8f06143654ca0d18ee644f61c37ae910c44308f71i0' ; 
+let vinylLabelAudio = 'https://ordinals.com/content/78b3b56af07cb926b0f8ac22322cf02714db23984b875bc5be15c726cd1ed27ci0'  ;
 
 let ordArrayAudio = 'https://ordinals.com/content/069f79685c04af6357058eeeb65c4835ed13d00b5bf5a69c4cff5e513d9b0fffi0';
 let ordArrayImage = 'https://ordinals.com/content/99d1ce468eccac8a43eb07fc99f83d920bbd4846255d477fc9746b28f877ee4ci0' ;

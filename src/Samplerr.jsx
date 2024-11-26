@@ -274,14 +274,19 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
   const playSample = (index, sampleLength) => {
     if (player) {
       const startTime = index * baseSampleDuration + sampleStartValue;
+      const maxStartTime = player.buffer.duration - sampleLength;
+
+      // Ensure startTime is within valid range
+      const validStartTime = Math.max(0, Math.min(startTime, maxStartTime));
+
       player.stop();
       player.loop = isLooping;
       if (isLooping) {
-        player.loopStart = startTime;
-        player.loopEnd = startTime + sampleLength;
+        player.loopStart = validStartTime;
+        player.loopEnd = validStartTime + sampleLength;
       }
       player.playbackRate = bpmSliderValue / defaultBPM;
-      player.start(undefined, startTime, isLooping ? undefined : sampleLength);
+      player.start(undefined, validStartTime, isLooping ? undefined : sampleLength);
     }
   };
   const stopSample = () => {
