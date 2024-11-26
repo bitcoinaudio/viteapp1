@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-// import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
-import { colors, vinylLabelImage, vinylLabelAudio } from '../BlackVinyl.V1/ordArray.js';
-
+import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
+ 
 
 function VinylRecord({ onClick, isFlipping }) {
   return (
