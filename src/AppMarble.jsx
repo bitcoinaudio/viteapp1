@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
 import { marbleImage, ordArrayImage, ordArrayAudio, coinUrl, colors } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
- 
+
 function VinylRecord({ onClick, isFlipping }) {
   return (
     <svg
@@ -59,7 +59,7 @@ function VinylRecord({ onClick, isFlipping }) {
         fill="url(#marblePattern)"
       />
 
-       {[...Array(12)].map((_, i) => (
+       {[...Array(9)].map((_, i) => (
         <circle
           key={i}
           cx="150"
@@ -134,11 +134,9 @@ export default function App() {
     };
   }, [isFlipping]); 
 
-  if (corsSuccess === null) {
-    return <div>Loading...</div>; 
-  }
+   
 
-  if (corsSuccess === true) {
+  if (corsSuccess === true || corsSuccess === null) {
     return (
       <div>
        <div
@@ -225,7 +223,7 @@ export default function App() {
       </div>
     </div>
     );
-  } else {
+  } else if (corsSuccess === false) {
     return (
     <iframe 
         src="https://arweave.net/0AphIk6Qiuu3RwGtYL02w9weo3Cci5Xp-M0LRgZ42Gg"

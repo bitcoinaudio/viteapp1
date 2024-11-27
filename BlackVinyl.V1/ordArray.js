@@ -99,20 +99,37 @@ export const vinylLabels = [
   }   
 ]
 
-
 var url = window.location.pathname;
 var urlarray = url.split("/");
 var ins_id = urlarray[urlarray.length - 1];
-//var ins_id = "9aea7d959fbd9bba7747294a0f8f8be1ec291380b9460e6a48c181f8e587fd91i0";
-let id = ins_id.endsWith('i0') ? ins_id.slice(0, -2) : ins_id;
+let id = '';
+let newId = '';
+let changingString = ins_id.slice(65); 
+ 
+newId = customHashFunction(changingString);
+ id = newId; 
+ 
+function customHashFunction(suffix) {
+  let input =  suffix;
+  let hash = '';
+  for (let i = 0; i < input.length; i++) {
+    const charCode = input.charCodeAt(i);
+    hash += ((charCode * 31) % 1024).toString(16).padStart(2, changingString);
+  }
+   while (hash.length < 64) {
+    hash += hash;
+  }
+  return hash.slice(0, 64);
+}
+ 
 
 const chunkSize = Math.floor(id.length / 8);
 const chunks = [];
 for (let i = 0; i < 8; i++) {
-  chunks.push(id.slice(i * chunkSize, (i + 1) * chunkSize));
+   chunks.push(id.slice(i * chunkSize, (i + 1) * chunkSize));
 }
 
-const colors = chunks.map(chunk => '#' + chunk.slice(0, 6) + "6f");
+const colors = chunks.map(chunk => '#' + chunk.slice(0, 6) + "3f");
 let goldMarble= 'https://ordinals.com/content/1a722dcfabb452f9fb3eadf5fa30b4f2cb25d7adbc75ff2226af12181b65197ci1'
 let bloodmarbleimage = 'https://ordinals.com/content/1a722dcfabb452f9fb3eadf5fa30b4f2cb25d7adbc75ff2226af12181b65197ci0'
 let marbleImage = goldMarble ;

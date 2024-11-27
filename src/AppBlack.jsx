@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Samplerr from './Samplerr.jsx';
-import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0';
- 
+import { colors, vinylLabelImage, vinylLabelAudio } from 'https://ordinals.com/content/acbbb181a17b4c5c6146d6451dd42794c735677122f475094b27c7e9c2175be3i0'; 
 
 function VinylRecord({ onClick, isFlipping }) {
   return (
@@ -73,8 +72,7 @@ export default function App() {
   useEffect(() => {
     function handleCorsCheckComplete(event) {
       setCorsSuccess(event.detail);
-      console.log("CORS check complete useeffect", event.detail);
-    }
+     }
 
     window.addEventListener('corsCheckComplete', handleCorsCheckComplete);
 
@@ -144,7 +142,7 @@ export default function App() {
           {!showSamplerrComponent ? (
             <>
               <VinylRecord
-                text={text}
+               
                 onClick={() => {
                   setIsFlipping(true);
                   setAudioUrl(audioUrl);

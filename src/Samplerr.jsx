@@ -11,7 +11,7 @@ const SamplerrContainer = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   padding: 8px;
   margin-bottom: 8px;
-   border-radius: 0.25rem;
+  border-radius: 0.25rem;
   position: relative;
 
   @media (max-width: 1024px) and (orientation: landscape) {
@@ -21,6 +21,12 @@ const SamplerrContainer = styled.div`
     gap: 20px;
     max-height: 100vh;
     overflow-y: auto;
+  }
+    @media (max-aspect-ratio: 1/1) {
+    display: block;
+    overflow-y: auto;
+    max-height: 100vh;
+    
   }
 `;
 
@@ -104,23 +110,6 @@ const StyledSlider = styled.input.attrs({ type: 'range' })`
   }
 `;
 
-const BackButton = styled.img`
-  padding: 10px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
-  z-index: 1;
-  width: 5vw;
-  height: auto;
-  transform: ${(props) => (props.isFlipping ? 'rotateY(180deg)' : 'rotateY(0deg)')};
-  transition: transform 0.6s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
 
 const CustomSlider = ({
   label,
@@ -168,9 +157,6 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       }, 150); // Match this duration with CSS transition
       return () => clearTimeout(timer);
     }
-
-   
-    // Cleanup function
     return () => {
      
       if (player) {
@@ -202,7 +188,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
 
   const loadAndDrawImage = (imageUrl) => {
     const img = new Image();
-    img.crossOrigin = 'Anonymous'; // Important for cross-origin images
+    img.crossOrigin = 'Anonymous';  
     img.src = imageUrl;
     img.onload = () => {
       fillGridWithImage(img);
@@ -259,8 +245,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       pads.push({ id: i, image: canvas.toDataURL() });
     }
 
-    // Set the sample pads in state
-    setSamplePads(pads);
+     setSamplePads(pads);
   };
 
   const selectSample = (index) => {
@@ -276,8 +261,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
       const startTime = index * baseSampleDuration + sampleStartValue;
       const maxStartTime = player.buffer.duration - sampleLength;
 
-      // Ensure startTime is within valid range
-      const validStartTime = Math.max(0, Math.min(startTime, maxStartTime));
+       const validStartTime = Math.max(0, Math.min(startTime, maxStartTime));
 
       player.stop();
       player.loop = isLooping;
@@ -432,7 +416,7 @@ const Samplerr = ({ audioUrl, imageUrl, onBack, buttonImage }) => {
           </label>
 
           <button onClick={stopSample} title="Stop">🛑</button>
-          <button onClick={onBack} title="Back">🔙</button>
+          <button onClick={() => { stopSample(); onBack(); }} title="Back">🔙</button>
           </div>
         </ControlsContainer>
       ) : (
